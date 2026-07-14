@@ -1,0 +1,94 @@
+:root {
+  color-scheme: dark;
+  --color-background: #010100;
+  --color-text: #b8ddd7;
+  --color-caption: #97b5b0;
+  --color-muted: #758985;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --transition-speed: 160ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--color-background);
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-md);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  width: 100%;
+  text-align: center;
+  transform: translateY(-3vh);
+}
+
+.logo-frame {
+  width: min(540px, 92vw);
+  aspect-ratio: 25 / 18;
+  margin: 0 auto 1.2rem;
+  overflow: hidden;
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateY(-14%);
+}
+
+h1 {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: 0.21em;
+  color: var(--color-caption);
+}
+
+p {
+  margin: 0.35rem auto 1.15rem;
+  color: var(--color-muted);
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.github-link {
+  display: inline-block;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+.github-link:hover {
+  color: var(--color-text);
+}
+
+.github-link:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .github-link {
+    transition: none;
+  }
+}
