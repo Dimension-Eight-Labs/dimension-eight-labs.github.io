@@ -51,10 +51,18 @@
   ];
 
   const cursorTail = [
-    { visible: false, delay: 230 },
-    { visible: true, delay: 260 },
-    { visible: false, delay: 220 },
-    { visible: true, delay: 260 }
+    { visible: false, delay: 310 },
+    { visible: true, delay: 430 },
+    { visible: false, delay: 280 },
+    { visible: true, delay: 390 },
+    { visible: false, delay: 340 },
+    { visible: true, delay: 460 },
+    { visible: false, delay: 295 },
+    { visible: true, delay: 410 },
+    { visible: false, delay: 360 },
+    { visible: true, delay: 445 },
+    { visible: false, delay: 320 },
+    { visible: true, delay: 400 }
   ];
 
   if (!overlay) {
@@ -115,6 +123,12 @@
 
   const setRevealEdge = (reveal) => {
     overlay.style.setProperty("--text-reveal-edge", `${reveal}%`);
+    overlay.style.setProperty("--cursor-edge", `${reveal}%`);
+  };
+
+  const resetTextReveal = () => {
+    overlay.style.setProperty("--text-reveal-edge", "24%");
+    overlay.style.setProperty("--cursor-edge", "25%");
   };
 
   const finishTyping = () => {
@@ -166,7 +180,7 @@
     phaseStep = 0;
     setState("cursor-lead-in");
     overlay.classList.add("is-text-phase");
-    setRevealEdge(25);
+    resetTextReveal();
     runCursorLeadIn();
   };
 
@@ -197,6 +211,7 @@
   };
 
   alignDisplay();
+  resetTextReveal();
 
   window.addEventListener("resize", alignDisplay);
 

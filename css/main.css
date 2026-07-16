@@ -151,6 +151,7 @@ html.vfd-intro-pending .vfd-startup__skip {
 .vfd-startup__logo--off {
   opacity: 0.16;
   filter: brightness(0.22) contrast(1.45) saturate(0.12) blur(0.25px);
+  clip-path: inset(0 0 26% 0);
 }
 
 .vfd-startup__logo--partial-a {
@@ -166,13 +167,17 @@ html.vfd-intro-pending .vfd-startup__skip {
 }
 
 .vfd-startup__logo--text {
-  clip-path: inset(74% calc(100% - var(--text-reveal-edge, 25%)) 19% 24%);
+  clip-path: inset(74% calc(100% - var(--text-reveal-edge, 24%)) 19% 24%);
+}
+
+.vfd-startup__logo--lit {
+  clip-path: inset(0 0 26% 0);
 }
 
 .vfd-startup__cursor {
   position: absolute;
   top: 84.2%;
-  left: calc(var(--text-reveal-edge, 25%) + 0.35%);
+  left: calc(var(--cursor-edge, 25%) + 0.35%);
   width: 1.25%;
   height: 6.2%;
   background: #9cc8c2;
