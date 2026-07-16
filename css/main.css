@@ -20,6 +20,10 @@ html {
   background: var(--color-background);
 }
 
+html.vfd-intro-pending main {
+  visibility: hidden;
+}
+
 body {
   min-height: 100vh;
   min-height: 100svh;
@@ -96,6 +100,17 @@ p {
   pointer-events: none;
 }
 
+html.vfd-intro-pending .vfd-startup {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html.vfd-intro-pending .vfd-startup__display,
+html.vfd-intro-pending .vfd-startup__debug,
+html.vfd-intro-pending .vfd-startup__skip {
+  visibility: hidden;
+}
+
 .vfd-startup[hidden] {
   display: none;
 }
@@ -144,6 +159,25 @@ p {
 
 .vfd-startup__logo--partial-b {
   clip-path: inset(5% 0 54% 0);
+}
+
+.vfd-startup__logo--mark {
+  clip-path: inset(0 0 26% 0);
+}
+
+.vfd-startup__logo--text {
+  clip-path: inset(74% calc(100% - var(--text-reveal-edge, 25%)) 19% 24%);
+}
+
+.vfd-startup__cursor {
+  position: absolute;
+  top: 84.2%;
+  left: calc(var(--text-reveal-edge, 25%) + 0.35%);
+  width: 1.25%;
+  height: 6.2%;
+  background: #9cc8c2;
+  opacity: 0;
+  filter: blur(0.25px);
 }
 
 .vfd-startup__heaters {
@@ -214,6 +248,17 @@ p {
   opacity: 0.18;
 }
 
+.vfd-startup.state-black-hold .vfd-startup__logo,
+.vfd-startup.state-black-hold .vfd-startup__heaters,
+.vfd-startup.state-black-hold .vfd-startup__cursor {
+  opacity: 0;
+}
+
+.vfd-startup.state-black-hold .vfd-startup__debug,
+.vfd-startup.state-black-hold .vfd-startup__skip {
+  visibility: hidden;
+}
+
 .vfd-startup.state-heater .vfd-startup__heaters {
   opacity: 0.78;
 }
@@ -260,8 +305,26 @@ p {
 }
 
 .vfd-startup.state-stable .vfd-startup__logo--lit {
+  opacity: 0;
+}
+
+.vfd-startup.state-stable .vfd-startup__logo--off,
+.vfd-startup.is-text-phase .vfd-startup__logo--off,
+.vfd-startup.is-text-phase .vfd-startup__logo--partial-a,
+.vfd-startup.is-text-phase .vfd-startup__logo--partial-b,
+.vfd-startup.is-text-phase .vfd-startup__logo--lit {
+  opacity: 0;
+}
+
+.vfd-startup.state-stable .vfd-startup__logo--mark,
+.vfd-startup.is-text-phase .vfd-startup__logo--mark,
+.vfd-startup.is-text-phase .vfd-startup__logo--text {
   opacity: 1;
   filter: none;
+}
+
+.vfd-startup.is-text-phase .vfd-startup__cursor.is-visible {
+  opacity: 0.88;
 }
 
 .vfd-startup.state-power-pop .vfd-startup__logo--lit {
@@ -277,6 +340,8 @@ p {
 .vfd-startup.state-blackout .vfd-startup__logo--lit,
 .vfd-startup.state-blackout .vfd-startup__logo--partial-a,
 .vfd-startup.state-blackout .vfd-startup__logo--partial-b,
+.vfd-startup.state-blackout .vfd-startup__logo--mark,
+.vfd-startup.state-blackout .vfd-startup__logo--text,
 .vfd-startup.state-blackout .vfd-startup__heaters {
   opacity: 0;
 }
@@ -290,4 +355,3 @@ p {
   opacity: 0.58;
   filter: brightness(0.72) contrast(1.2) saturate(0.7);
 }
-

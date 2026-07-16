@@ -5,45 +5,58 @@
   const skip = document.querySelector("[data-vfd-startup-skip]");
   const debugState = document.querySelector("[data-vfd-startup-debug]");
   const logoFrame = document.querySelector("main .logo-frame");
+  const cursor = document.querySelector(".vfd-startup__cursor");
 
-  /*
-   * Deliberately long development timings.
-   *
-   * Each state remains visible for five seconds so the visual layers can be
-   * inspected individually. The final stable state remains indefinitely.
-   *
-   * Once the visual behavior is correct, shorten these durations and restore
-   * the normal completion, reduced-motion, and session behavior.
-   */
+  // Existing ignition timings, preceded by a first-paint black hold.
+  const sequence = [
+    { state: "black-hold", duration: 400 },
+    { state: "power-pop", duration: 55 },
+    { state: "blackout", duration: 950 },
+    { state: "heater", duration: 850 },
+    { state: "faint-ghost", duration: 500 },
+    { state: "strike-1", duration: 75 },
+    { state: "blackout", duration: 480 },
+    { state: "partial", duration: 260 },
+    { state: "short-dropout", duration: 180 },
+    { state: "strike-2", duration: 65 },
+    { state: "short-dropout", duration: 90 },
+    { state: "partial-2", duration: 110 },
+    { state: "short-dropout", duration: 55 },
+    { state: "ignite", duration: 220 },
+    { state: "flutter", duration: 90 },
+    { state: "stable", duration: 400 }
+  ];
 
-const sequence = [
-  // Power is applied: one abrupt transient, then complete failure.
-  { state: "power-pop",       duration: 55 },
-  { state: "blackout",        duration: 950 },
+  const cursorLeadIn = [
+    { visible: true, delay: 260 },
+    { visible: false, delay: 210 },
+    { visible: true, delay: 240 },
+    { visible: false, delay: 190 },
+    { visible: true, delay: 275 },
+    { visible: false, delay: 205 },
+    { visible: true, delay: 250 },
+    { visible: false, delay: 180 }
+  ];
 
-  // The display slowly begins showing signs of life.
-  { state: "heater",          duration: 850 },
-  { state: "faint-ghost",     duration: 500 },
+  // Frame-relative reveal edges, tuned to the glyph boundaries in the source PNG.
+  const typingSteps = [
+    { reveal: 30.2, delay: 145 }, // D
+    { reveal: 33.1, delay: 105 }, // I
+    { reveal: 40.1, delay: 190 }, // M
+    { reveal: 47.0, delay: 310 }, // 8 and word space
+    { reveal: 57.0, delay: 125 }, // L
+    { reveal: 63.0, delay: 175 }, // A
+    { reveal: 69.3, delay: 115 }, // B
+    { reveal: 75.2, delay: 160 }  // S
+  ];
 
-  // First failed ignition.
-  { state: "strike-1",        duration: 75 },
-  { state: "blackout",        duration: 480 },
+  const cursorTail = [
+    { visible: false, delay: 230 },
+    { visible: true, delay: 260 },
+    { visible: false, delay: 220 },
+    { visible: true, delay: 260 }
+  ];
 
-  // Weak, uneven attempt.
-  { state: "partial",         duration: 260 },
-  { state: "short-dropout",   duration: 180 },
-
-  // Two quick, irregular flickers.
-  { state: "strike-2",        duration: 65 },
-  { state: "short-dropout",   duration: 90 },
-  { state: "partial-2",       duration: 110 },
-  { state: "short-dropout",   duration: 55 },
-
-  // Existing successful startup ending.
-  { state: "ignite",          duration: 220 },
-  { state: "flutter",         duration: 90 },
-  { state: "stable",          duration: 400 }
-];
   if (!overlay) {
     console.error("DIM8 startup: overlay element was not found.");
     return;
@@ -57,6 +70,7 @@ const sequence = [
   let timer = null;
   let step = 0;
   let currentState = "";
+  let phaseStep = 0;
 
   const alignDisplay = () => {
     const bounds = logoFrame.getBoundingClientRect();
@@ -95,20 +109,82 @@ const sequence = [
     console.log(`DIM8 startup state: ${state}`);
   };
 
+  const setCursor = (visible) => {
+    cursor.classList.toggle("is-visible", visible);
+  };
+
+  const setRevealEdge = (reveal) => {
+    overlay.style.setProperty("--text-reveal-edge", `${reveal}%`);
+  };
+
+  const finishTyping = () => {
+    setState("typing-complete");
+    setCursor(true);
+    console.log("DIM8 text reveal complete; display remains visible.");
+  };
+
+  const runCursorTail = () => {
+    if (phaseStep >= cursorTail.length) {
+      finishTyping();
+      return;
+    }
+
+    const next = cursorTail[phaseStep++];
+    setCursor(next.visible);
+    timer = window.setTimeout(runCursorTail, next.delay);
+  };
+
+  const typeNextCharacter = () => {
+    if (phaseStep >= typingSteps.length) {
+      phaseStep = 0;
+      setState("cursor-tail");
+      runCursorTail();
+      return;
+    }
+
+    const next = typingSteps[phaseStep++];
+    setRevealEdge(next.reveal);
+    showDebugState(`typing-${phaseStep}`);
+    timer = window.setTimeout(typeNextCharacter, next.delay);
+  };
+
+  const runCursorLeadIn = () => {
+    if (phaseStep >= cursorLeadIn.length) {
+      phaseStep = 0;
+      setState("typing");
+      setCursor(true);
+      typeNextCharacter();
+      return;
+    }
+
+    const next = cursorLeadIn[phaseStep++];
+    setCursor(next.visible);
+    timer = window.setTimeout(runCursorLeadIn, next.delay);
+  };
+
+  const startTextReveal = () => {
+    phaseStep = 0;
+    setState("cursor-lead-in");
+    overlay.classList.add("is-text-phase");
+    setRevealEdge(25);
+    runCursorLeadIn();
+  };
+
   const stopSequence = () => {
     window.clearTimeout(timer);
     timer = null;
 
-    setState("stable");
+    overlay.classList.add("is-text-phase");
+    setRevealEdge(75.2);
+    setState("typing-complete");
+    setCursor(true);
 
     console.log("DIM8 startup sequence stopped manually.");
   };
 
   const advance = () => {
     if (step >= sequence.length) {
-      console.log(
-        "DIM8 startup sequence reached the final stable state and will remain visible."
-      );
+      startTextReveal();
       return;
     }
 
@@ -117,17 +193,6 @@ const sequence = [
 
     setState(next.state);
 
-    /*
-     * Do not schedule another step after the final stable state.
-     * This leaves the overlay visible indefinitely for inspection.
-     */
-    if (step >= sequence.length) {
-      console.log(
-        "DIM8 startup sequence reached the final stable state and will remain visible."
-      );
-      return;
-    }
-
     timer = window.setTimeout(advance, next.duration);
   };
 
@@ -135,10 +200,7 @@ const sequence = [
 
   window.addEventListener("resize", alignDisplay);
 
-  /*
-   * During development, Skip does not hide the startup overlay.
-   * It simply stops the sequence and switches directly to the stable state.
-   */
+  // During development, Skip jumps to the completed display without hiding it.
   if (skip) {
     skip.addEventListener("click", stopSequence);
   }
@@ -146,10 +208,10 @@ const sequence = [
   overlay.hidden = false;
   overlay.classList.remove("is-finishing");
   overlay.classList.add("is-active");
+  document.documentElement.classList.remove("vfd-intro-pending");
 
   console.log("DIM8 startup development sequence starting.");
-  console.log("Each state lasts five seconds.");
-  console.log("The final stable state remains visible indefinitely.");
+  console.log("The final typed state remains visible indefinitely.");
 
   advance();
 })();

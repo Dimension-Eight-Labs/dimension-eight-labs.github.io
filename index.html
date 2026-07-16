@@ -1,11 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="vfd-intro-pending">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Dimension Eight Labs builds open source software, firmware, and embedded systems.">
     <title>Dimension Eight Labs</title>
     <link rel="stylesheet" href="css/main.css">
+    <script>
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("vfd-intro-pending");
+      }, 2000);
+    </script>
+    <noscript>
+      <style>
+        html.vfd-intro-pending main { visibility: visible; }
+        .vfd-startup { display: none; }
+      </style>
+    </noscript>
     <script src="js/main.js" defer></script>
   </head>
   <body>
@@ -27,13 +38,16 @@
       >GitHub →</a>
     </main>
 
-    <div class="vfd-startup" data-vfd-startup hidden>
+    <div class="vfd-startup" data-vfd-startup>
       <div class="vfd-startup__display" aria-hidden="true">
         <div class="logo-frame vfd-startup__frame">
           <img class="logo vfd-startup__logo vfd-startup__logo--off" src="images/dim8-vfd-logo.png" alt="">
           <img class="logo vfd-startup__logo vfd-startup__logo--partial-a" src="images/dim8-vfd-logo.png" alt="">
           <img class="logo vfd-startup__logo vfd-startup__logo--partial-b" src="images/dim8-vfd-logo.png" alt="">
           <img class="logo vfd-startup__logo vfd-startup__logo--lit" src="images/dim8-vfd-logo.png" alt="">
+          <img class="logo vfd-startup__logo vfd-startup__logo--mark" src="images/dim8-vfd-logo.png" alt="">
+          <img class="logo vfd-startup__logo vfd-startup__logo--text" src="images/dim8-vfd-logo.png" alt="">
+          <span class="vfd-startup__cursor" aria-hidden="true"></span>
           <div class="vfd-startup__heaters">
             <span></span>
             <span></span>
