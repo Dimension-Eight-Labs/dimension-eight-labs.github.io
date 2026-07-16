@@ -1,9 +1,6 @@
 (() => {
-  const SHOW_STARTUP_DEBUG_STATE = true;
-
   const overlay = document.querySelector("[data-vfd-startup]");
   const skip = document.querySelector("[data-vfd-startup-skip]");
-  const debugState = document.querySelector("[data-vfd-startup-debug]");
   const logoFrame = document.querySelector("main .logo-frame");
   const cursor = document.querySelector(".vfd-startup__cursor");
 
@@ -65,6 +62,16 @@
     { visible: true, delay: 400 }
   ];
 
+  const shutdownSequence = [
+    { state: "completed-hold", duration: 700 },
+    { state: "collapse-line", duration: 135 },
+    { state: "collapse-dot", duration: 105 },
+    { state: "dot-hold", duration: 170 },
+    { state: "dot-out", duration: 90 },
+    { state: "shutdown-black", duration: 900 }
+  ];
+  const overlayFadeDuration = 950;
+
   if (!overlay) {
     console.error("DIM8 startup: overlay element was not found.");
     return;
@@ -79,6 +86,7 @@
   let step = 0;
   let currentState = "";
   let phaseStep = 0;
+  let shutdownStep = 0;
 
   const alignDisplay = () => {
     const bounds = logoFrame.getBoundingClientRect();
@@ -88,15 +96,6 @@
     overlay.style.setProperty("--startup-logo-width", `${bounds.width}px`);
     overlay.style.setProperty("--startup-logo-height", `${bounds.height}px`);
     overlay.style.setProperty("--startup-logo-fallback", "none");
-  };
-
-  const showDebugState = (state) => {
-    if (!SHOW_STARTUP_DEBUG_STATE || !debugState) {
-      return;
-    }
-
-    debugState.hidden = false;
-    debugState.textContent = state;
   };
 
   const clearCurrentState = () => {
@@ -112,9 +111,6 @@
 
     currentState = state;
     overlay.classList.add(`state-${state}`);
-
-    showDebugState(state);
-    console.log(`DIM8 startup state: ${state}`);
   };
 
   const setCursor = (visible) => {
@@ -131,10 +127,44 @@
     overlay.style.setProperty("--cursor-edge", "25%");
   };
 
+  const revealHomepage = (immediate = false) => {
+    window.clearTimeout(timer);
+    timer = null;
+    window.removeEventListener("resize", alignDisplay);
+    if (skip) {
+      skip.removeEventListener("click", skipIntro);
+      skip.blur();
+    }
+
+    if (immediate) {
+      overlay.hidden = true;
+      overlay.className = "vfd-startup";
+      return;
+    }
+
+    overlay.classList.add("is-finishing");
+    timer = window.setTimeout(() => {
+      timer = null;
+      overlay.hidden = true;
+      overlay.className = "vfd-startup";
+    }, overlayFadeDuration);
+  };
+
+  const runShutdown = () => {
+    if (shutdownStep >= shutdownSequence.length) {
+      revealHomepage();
+      return;
+    }
+
+    const next = shutdownSequence[shutdownStep++];
+    setState(next.state);
+    timer = window.setTimeout(runShutdown, next.duration);
+  };
+
   const finishTyping = () => {
-    setState("typing-complete");
+    shutdownStep = 0;
     setCursor(true);
-    console.log("DIM8 text reveal complete; display remains visible.");
+    runShutdown();
   };
 
   const runCursorTail = () => {
@@ -158,7 +188,6 @@
 
     const next = typingSteps[phaseStep++];
     setRevealEdge(next.reveal);
-    showDebugState(`typing-${phaseStep}`);
     timer = window.setTimeout(typeNextCharacter, next.delay);
   };
 
@@ -184,17 +213,9 @@
     runCursorLeadIn();
   };
 
-  const stopSequence = () => {
-    window.clearTimeout(timer);
-    timer = null;
-
-    overlay.classList.add("is-text-phase");
-    setRevealEdge(75.2);
-    setState("typing-complete");
-    setCursor(true);
-
-    console.log("DIM8 startup sequence stopped manually.");
-  };
+  function skipIntro() {
+    revealHomepage(true);
+  }
 
   const advance = () => {
     if (step >= sequence.length) {
@@ -215,18 +236,16 @@
 
   window.addEventListener("resize", alignDisplay);
 
-  // During development, Skip jumps to the completed display without hiding it.
   if (skip) {
-    skip.addEventListener("click", stopSequence);
+    skip.addEventListener("click", skipIntro);
   }
 
   overlay.hidden = false;
   overlay.classList.remove("is-finishing");
   overlay.classList.add("is-active");
   document.documentElement.classList.remove("vfd-intro-pending");
-
-  console.log("DIM8 startup development sequence starting.");
-  console.log("The final typed state remains visible indefinitely.");
+  window.clearTimeout(window.dim8IntroFallbackTimer);
+  delete window.dim8IntroFallbackTimer;
 
   advance();
 })();

@@ -57,19 +57,13 @@ main {
   transform: translateY(-14%);
 }
 
-h1 {
-  margin: 0;
-  font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
-  font-size: clamp(1.25rem, 4vw, 1.5rem);
-  font-weight: 300;
-  letter-spacing: 0.21em;
-  color: var(--color-caption);
-}
-
-p {
-  margin: 0.35rem auto 1.15rem;
+.tagline {
+  margin: 0 auto 1.35rem;
   color: var(--color-muted);
   font-size: clamp(0.875rem, 2.5vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.65;
 }
 
 .github-link {
@@ -106,7 +100,6 @@ html.vfd-intro-pending .vfd-startup {
 }
 
 html.vfd-intro-pending .vfd-startup__display,
-html.vfd-intro-pending .vfd-startup__debug,
 html.vfd-intro-pending .vfd-startup__skip {
   visibility: hidden;
 }
@@ -122,7 +115,8 @@ html.vfd-intro-pending .vfd-startup__skip {
 
 .vfd-startup.is-finishing {
   opacity: 0;
-  transition: opacity 300ms ease-out;
+  pointer-events: none;
+  transition: opacity 950ms ease-out;
 }
 
 .vfd-startup__display {
@@ -237,18 +231,6 @@ html.vfd-intro-pending .vfd-startup__skip {
   outline-offset: 4px;
 }
 
-/* Development-only state readout; controlled by SHOW_STARTUP_DEBUG_STATE. */
-.vfd-startup__debug {
-  position: absolute;
-  top: clamp(0.75rem, 2vw, 1.25rem);
-  left: clamp(0.75rem, 2vw, 1.25rem);
-  color: #52615e;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .vfd-startup.state-off .vfd-startup__logo--off {
   opacity: 0.18;
 }
@@ -259,7 +241,6 @@ html.vfd-intro-pending .vfd-startup__skip {
   opacity: 0;
 }
 
-.vfd-startup.state-black-hold .vfd-startup__debug,
 .vfd-startup.state-black-hold .vfd-startup__skip {
   visibility: hidden;
 }
@@ -359,4 +340,34 @@ html.vfd-intro-pending .vfd-startup__skip {
 .vfd-startup.state-partial-2 .vfd-startup__logo--partial-b {
   opacity: 0.58;
   filter: brightness(0.72) contrast(1.2) saturate(0.7);
+}
+
+.vfd-startup.state-collapse-line .vfd-startup__display {
+  transform: scaleY(0.006);
+  transform-origin: center;
+  transition: transform 135ms cubic-bezier(0.55, 0, 1, 0.55);
+}
+
+.vfd-startup.state-collapse-dot .vfd-startup__display,
+.vfd-startup.state-dot-hold .vfd-startup__display,
+.vfd-startup.state-dot-out .vfd-startup__display {
+  transform: scale(0.008, 0.006);
+  transform-origin: center;
+}
+
+.vfd-startup.state-collapse-dot .vfd-startup__display {
+  transition: transform 105ms ease-in;
+}
+
+.vfd-startup.state-dot-out .vfd-startup__display {
+  opacity: 0;
+  transition: opacity 90ms ease-out;
+}
+
+.vfd-startup.state-shutdown-black .vfd-startup__display {
+  opacity: 0;
+}
+
+.vfd-startup.state-shutdown-black .vfd-startup__skip {
+  visibility: hidden;
 }

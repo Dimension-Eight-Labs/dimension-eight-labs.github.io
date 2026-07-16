@@ -7,7 +7,7 @@
     <title>Dimension Eight Labs</title>
     <link rel="stylesheet" href="css/main.css">
     <script>
-      window.setTimeout(() => {
+      window.dim8IntroFallbackTimer = window.setTimeout(() => {
         document.documentElement.classList.remove("vfd-intro-pending");
       }, 2000);
     </script>
@@ -28,8 +28,7 @@
           alt="DIM8 vacuum fluorescent display logo"
         >
       </figure>
-      <h1>Dimension Eight Labs</h1>
-      <p>Open source software, firmware, and embedded systems.</p>
+      <p class="tagline">Open source software, firmware, and embedded systems.</p>
       <a
         class="github-link"
         href="https://github.com/Dimension-Eight-Labs"
@@ -55,7 +54,6 @@
           </div>
         </div>
       </div>
-      <output class="vfd-startup__debug" data-vfd-startup-debug hidden>inactive</output>
       <button class="vfd-startup__skip" type="button" data-vfd-startup-skip>Skip</button>
     </div>
   </body>
