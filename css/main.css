@@ -87,8 +87,207 @@ p {
   outline-offset: 4px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .github-link {
-    transition: none;
-  }
+.vfd-startup {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: var(--color-background);
+  opacity: 0;
+  pointer-events: none;
 }
+
+.vfd-startup[hidden] {
+  display: none;
+}
+
+.vfd-startup.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vfd-startup.is-finishing {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+.vfd-startup__display {
+  position: absolute;
+  top: var(--startup-logo-top, 50%);
+  left: var(--startup-logo-left, 50%);
+  width: var(--startup-logo-width, min(540px, 92vw));
+  height: var(--startup-logo-height, auto);
+  transform: var(--startup-logo-fallback, translate(-50%, -50%));
+}
+
+.vfd-startup__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.vfd-startup__logo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  filter: brightness(0.1) contrast(1.15) saturate(0.35);
+}
+
+.vfd-startup__logo--off {
+  opacity: 0.16;
+  filter: brightness(0.22) contrast(1.45) saturate(0.12) blur(0.25px);
+}
+
+.vfd-startup__logo--partial-a {
+  clip-path: inset(29% 4% 35% 3%);
+}
+
+.vfd-startup__logo--partial-b {
+  clip-path: inset(5% 0 54% 0);
+}
+
+.vfd-startup__heaters {
+  position: absolute;
+  inset: 15% 6% 20%;
+  opacity: 0;
+}
+
+.vfd-startup__heaters span {
+  position: absolute;
+  left: 3%;
+  width: 94%;
+  border-top: 1px solid #657b7f;
+  opacity: 0.22;
+}
+
+.vfd-startup__heaters span:nth-child(1) {
+  top: 29%;
+}
+
+.vfd-startup__heaters span:nth-child(2) {
+  top: 51%;
+}
+
+.vfd-startup__heaters span:nth-child(3) {
+  top: 72%;
+}
+
+.vfd-startup__skip {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid #46514f;
+  border-radius: 0;
+  background: transparent;
+  color: #667875;
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.vfd-startup__skip:hover {
+  color: var(--color-caption);
+  border-color: var(--color-muted);
+}
+
+.vfd-startup__skip:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 4px;
+}
+
+/* Development-only state readout; controlled by SHOW_STARTUP_DEBUG_STATE. */
+.vfd-startup__debug {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.25rem);
+  left: clamp(0.75rem, 2vw, 1.25rem);
+  color: #52615e;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vfd-startup.state-off .vfd-startup__logo--off {
+  opacity: 0.18;
+}
+
+.vfd-startup.state-heater .vfd-startup__heaters {
+  opacity: 0.78;
+}
+
+.vfd-startup.state-faint-ghost .vfd-startup__logo--lit {
+  opacity: 0.22;
+  filter: brightness(0.42) contrast(1.4) saturate(0.45) blur(0.65px);
+}
+
+.vfd-startup.state-strike-1 .vfd-startup__logo--lit {
+  opacity: 0.52;
+  filter: brightness(0.78) contrast(1.25) saturate(0.72) blur(0.35px);
+}
+
+.vfd-startup.state-dropout .vfd-startup__logo--off,
+.vfd-startup.state-short-dropout .vfd-startup__logo--off {
+  opacity: 0.035;
+  filter: brightness(0.08) contrast(1.25) saturate(0);
+}
+
+.vfd-startup.state-strike-2 .vfd-startup__logo--partial-a {
+  opacity: 0.72;
+  filter: brightness(0.95) contrast(1.2) saturate(0.9) blur(0.2px);
+}
+
+.vfd-startup.state-partial .vfd-startup__logo--partial-a {
+  opacity: 1;
+  filter: brightness(1.12) contrast(1.15) saturate(1.05);
+}
+
+.vfd-startup.state-partial .vfd-startup__logo--partial-b {
+  opacity: 0.38;
+  filter: brightness(0.58) contrast(1.25) saturate(0.6) blur(0.4px);
+}
+
+.vfd-startup.state-ignite .vfd-startup__logo--lit {
+  opacity: 1;
+  filter: none;
+}
+
+.vfd-startup.state-flutter .vfd-startup__logo--lit {
+  opacity: 0.9;
+  filter: brightness(0.95);
+}
+
+.vfd-startup.state-stable .vfd-startup__logo--lit {
+  opacity: 1;
+  filter: none;
+}
+
+.vfd-startup.state-power-pop .vfd-startup__logo--lit {
+  opacity: 1;
+  filter: brightness(1.4) contrast(1.08) saturate(1.1);
+}
+
+.vfd-startup.state-blackout .vfd-startup__logo--off {
+  opacity: 0.02;
+  filter: brightness(0.04) saturate(0);
+}
+
+.vfd-startup.state-blackout .vfd-startup__logo--lit,
+.vfd-startup.state-blackout .vfd-startup__logo--partial-a,
+.vfd-startup.state-blackout .vfd-startup__logo--partial-b,
+.vfd-startup.state-blackout .vfd-startup__heaters {
+  opacity: 0;
+}
+
+.vfd-startup.state-partial-2 .vfd-startup__logo--partial-a {
+  opacity: 0.82;
+  filter: brightness(1.02) contrast(1.18) saturate(0.9);
+}
+
+.vfd-startup.state-partial-2 .vfd-startup__logo--partial-b {
+  opacity: 0.58;
+  filter: brightness(0.72) contrast(1.2) saturate(0.7);
+}
+
