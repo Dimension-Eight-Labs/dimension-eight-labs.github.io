@@ -43,6 +43,15 @@ main {
   transform: translateY(-3vh);
 }
 
+h1 {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: 0.21em;
+  color: var(--color-caption);
+}
+
 .logo-frame {
   width: min(540px, 92vw);
   aspect-ratio: 25 / 18;
@@ -371,3 +380,4 @@ html.vfd-intro-pending .vfd-startup__skip {
 .vfd-startup.state-shutdown-black .vfd-startup__skip {
   visibility: hidden;
 }
+
