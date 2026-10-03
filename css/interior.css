@@ -1,0 +1,441 @@
+/* Cyan belongs to site chrome; readable interior content uses neutral off-whites. */
+body.interior-page {
+  display: block;
+  place-items: normal;
+  padding: 0;
+  color: var(--content-text);
+  /* Keep the top near-black, easing into a dark, neutral charcoal surface. */
+  background-color: #191b1c;
+  background-image: linear-gradient(to bottom, var(--color-background) 0, #050708 10rem, #191b1c 42rem);
+  background-repeat: no-repeat;
+}
+
+.interior-page {
+  --interior-width: 70rem;
+  --interior-rule: #52666b;
+  --content-heading: #f2f2ef;
+  --content-text: #d3d6d6;
+  --content-secondary: #b9bdbd;
+}
+
+dim8-header {
+  display: block;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--interior-rule);
+}
+
+.site-header__inner,
+.interior-main {
+  width: min(100% - 3rem, var(--interior-width));
+  margin-inline: auto;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  padding-block: var(--space-sm);
+}
+
+.site-brand {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  color: var(--color-caption);
+  text-decoration: none;
+}
+
+/* Crop the existing PNG to its seven-segment mark. No new artwork or animation. */
+.site-brand__mark {
+  position: relative;
+  display: block;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 72.8px;
+  overflow: hidden;
+}
+
+.site-brand__mark img {
+  position: absolute;
+  width: 145.6px;
+  height: 145.6px;
+  max-width: none;
+  left: -44.2px;
+  top: -26px;
+}
+
+.site-brand__text {
+  font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  letter-spacing: 0.21em;
+  /* Align the visible lettering with the mark's lower edge above the header rule. */
+  line-height: 1;
+  transform: translateY(0.15em);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+}
+
+.modal-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.5rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition-speed) ease;
+}
+
+.modal-control:hover,
+.site-brand:hover {
+  color: var(--color-text);
+}
+
+.interior-page :focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 4px;
+}
+
+.interior-main {
+  text-align: left;
+  transform: none;
+  color: var(--content-text);
+  font-size: 1rem;
+  line-height: 1.75;
+  letter-spacing: normal;
+}
+
+.interior-main :where(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  color: var(--content-heading);
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 1.35;
+}
+
+.interior-main :where(h1) {
+  font-size: 1.5rem;
+}
+
+.interior-main :where(h2) {
+  font-size: 1.25rem;
+}
+
+.interior-main :where(h3, h4, h5, h6) {
+  font-size: 1.125rem;
+}
+
+.interior-main :where(figcaption, .content-caption) {
+  color: var(--content-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  letter-spacing: normal;
+}
+
+/* Preserve the landing link's rhythm inside longer-reading content regions. */
+.interior-page .dim8-link {
+  line-height: 1.5;
+}
+
+.contact-dialog h2 {
+  font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  letter-spacing: 0.21em;
+  color: var(--color-caption);
+  margin: 0;
+}
+
+.identity-strip {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  padding-block: 2rem;
+  border-bottom: 1px solid var(--interior-rule);
+}
+
+.identity-strip h1 {
+  color: var(--content-heading);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+}
+
+.identity-group {
+  display: grid;
+  grid-template-rows: 1.75rem minmax(2.375rem, auto);
+  align-items: center;
+  justify-items: start;
+  row-gap: var(--space-xs);
+}
+
+.identity-group--details {
+  justify-items: end;
+  text-align: right;
+}
+
+.resume-link {
+  white-space: nowrap;
+}
+
+.pdf-document {
+  display: inline-block;
+  width: 2rem;
+  height: 2.375rem;
+  margin-right: var(--space-xs);
+  vertical-align: middle;
+  color: var(--color-caption);
+}
+
+.location,
+.interior-note,
+.resume-notice,
+.pending-notice {
+  color: var(--content-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.65;
+}
+
+.resume-notice,
+.pending-notice {
+  display: none;
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.resume-notice:target,
+.pending-notice:target {
+  display: block;
+}
+
+.portfolio-projects,
+.examples-placeholder {
+  padding-block: var(--space-lg);
+}
+
+/* Each entry keeps image-first source order. Only the desktop grid alternates. */
+.portfolio-projects {
+  display: grid;
+  row-gap: clamp(4rem, 8vw, 7rem);
+}
+
+.project-entry {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "media copy";
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.project-entry:nth-child(even) {
+  grid-template-areas: "copy media";
+}
+
+.project-media {
+  grid-area: media;
+  position: relative;
+  display: grid;
+  /* This default sizes placeholders; set --project-image-ratio for actual artwork. */
+  aspect-ratio: var(--project-image-ratio, 4 / 3);
+  color: var(--content-secondary);
+  text-decoration: none;
+}
+
+.project-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.project-image-placeholder {
+  display: grid;
+  place-items: center;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-muted);
+  background: rgb(151 181 176 / 4%);
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.project-copy {
+  grid-area: copy;
+  min-width: 0;
+}
+
+.project-title {
+  margin: 0;
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+}
+
+.project-summary {
+  margin-block: var(--space-sm) var(--space-md);
+  color: var(--content-text);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.75;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+}
+
+.project-detail {
+  padding-block: var(--space-lg);
+}
+
+.project-detail .project-actions {
+  margin-top: var(--space-md);
+}
+
+.project-detail-content {
+  margin-top: var(--space-lg);
+}
+
+.project-detail-content :where(p, ul, ol, blockquote) {
+  max-width: 70ch;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-md);
+  z-index: 1;
+  padding: var(--space-xs);
+  background: var(--color-background);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.contact-dialog {
+  width: min(32rem, calc(100% - 2rem));
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+  padding: var(--space-md);
+  border: 1px solid var(--color-muted);
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+.contact-dialog::backdrop {
+  background: rgb(1 1 0 / 85%);
+}
+
+.contact-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.contact-form {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.contact-form label {
+  margin-top: var(--space-xs);
+  color: var(--color-caption);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.625rem;
+  border: 1px solid var(--color-muted);
+  border-radius: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+.contact-form .interior-note {
+  margin-block: var(--space-xs);
+}
+
+.form-submit {
+  justify-self: start;
+  padding: 0.625rem var(--space-sm);
+  border: 1px solid var(--color-muted);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.form-submit:hover {
+  border-color: var(--color-text);
+}
+
+@media (max-width: 40rem) {
+  .site-header__inner,
+  .interior-main {
+    width: calc(100% - 2rem);
+  }
+
+  .site-nav {
+    flex-basis: 100%;
+  }
+
+  .identity-strip {
+    column-gap: var(--space-md);
+  }
+
+  .project-entry,
+  .project-entry:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "media" "copy";
+  }
+}
+
+@media (max-width: 24rem) {
+  .identity-group--details {
+    flex-basis: 100%;
+    justify-items: start;
+    text-align: left;
+  }
+}

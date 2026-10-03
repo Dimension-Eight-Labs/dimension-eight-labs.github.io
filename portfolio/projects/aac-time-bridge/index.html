@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="AAC Time Bridge is an ESP32 network-time appliance that qualifies time from the Absurdly Accurate Clock and serves it to a local network.">
+    <title>AAC Time Bridge — Dimension Eight Labs</title>
+    <link rel="stylesheet" href="../../../css/main.css?v=interior-content-4">
+    <link rel="stylesheet" href="../../../css/interior.css?v=interior-content-4">
+    <link rel="stylesheet" href="../../../css/project-detail.css?v=project-navigation-1">
+    <script src="../../../js/interior.js?v=interior-content-4" defer></script>
+  </head>
+  <body class="interior-page">
+    <a class="dim8-link skip-link" href="#main-content">Skip to content →</a>
+    <dim8-header current-page="portfolio"></dim8-header>
+    <main id="main-content" class="interior-main project-detail" tabindex="-1">
+      <h1>AAC Time Bridge</h1>
+      <figure class="case-study-image">
+        <img src="../../../images/AAC-BRIDGE-WEBUI-Screenshot.png" width="1350" height="1511" alt="AAC Time Bridge WebUI showing live clock qualification, network state, diagnostics, and appliance management." decoding="async">
+      </figure>
+      <div class="project-actions">
+        <a class="dim8-link" href="https://github.com/rhaag71/aac-time-bridge" target="_blank" rel="noopener noreferrer">GitHub →</a>
+      </div>
+      <div id="project-detail-content" class="project-detail-content">
+        <section class="case-study-section" aria-labelledby="overview-heading">
+          <h2 id="overview-heading">Overview</h2>
+          <p>AAC Time Bridge is a standalone ESP32 network-time appliance and companion to the Absurdly Accurate Clock. It runs on a NodeMCU ESP-32S / ESP-WROOM-32 and gives devices on the infrastructure LAN access to time received from the clock’s Pico 2 / RP2350. The clock remains the sole authoritative source. Time Bridge is a read-only consumer: it does not set or discipline the Pico, and it does not substitute its own wall clock, a browser clock, or an Internet time service when AAC time is unavailable.</p>
+          <p>The engineering boundary is the handoff between a qualified timing source and ordinary network services. The ESP32 validates AAC Protocol v1 snapshots, associates them with the source’s TIME_SYNC timing boundary, and keeps one centralized appliance state for the NTP service, WebUI, serial diagnostics, and status indicator. If that source relationship cannot be trusted, the appliance stays operational but reports itself as UNSYNCHRONIZED.</p>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="system-architecture-heading">
+          <h2 id="system-architecture-heading">System Architecture</h2>
+          <p>This diagram shows the authoritative time path from the Absurdly Accurate Clock through the qualification boundary and AAC Time Bridge to LAN NTP distribution.</p>
+          <figure class="case-study-architecture">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 790" role="img" aria-label="AAC Time Bridge technical architecture" preserveAspectRatio="xMidYMid meet">
+            <style>
+            svg{display:block;width:100%;height:auto;max-width:100%;background:#090c10}
+            .panel{fill:#121922;stroke:#29333e;stroke-width:1.5}.sub{fill:#0e1319;stroke:#29333e;stroke-width:1.2}
+            .title{fill:#e8edf2;font:700 18px ui-sans-serif,system-ui,sans-serif}.h2{fill:#e8edf2;font:650 13px ui-sans-serif,system-ui,sans-serif}
+            .body{fill:#8f9ba7;font:11px ui-sans-serif,system-ui,sans-serif}.mono{fill:#8f9ba7;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
+            .gapmono{fill:#8f9ba7;font:8.4px ui-monospace,SFMono-Regular,Menlo,monospace}.gapsmall{fill:#8f9ba7;font:8px ui-sans-serif,system-ui,sans-serif}
+            .cap{fill:#8f9ba7;font:700 9px ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em}
+            .auth{stroke:#69d8e7;fill:none;stroke-width:3}.ntp{stroke:#6f9fda;fill:none;stroke-width:2.6}
+            .ui{stroke:#9b8fd8;fill:none;stroke-width:2}.cfg{stroke:#d2a85d;fill:none;stroke-width:2;stroke-dasharray:7 5}
+            .mutedline{stroke:#29333e;fill:none;stroke-width:1.4}.good{fill:#102328;stroke:#69d8e7;stroke-width:1.2}
+            .warn{fill:#241c13;stroke:#d2a85d;stroke-width:1.2}
+            </style>
+            <defs>
+            <marker id="arr-auth-clean" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#69d8e7"/></marker>
+            <marker id="arr-ntp-clean" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#6f9fda"/></marker>
+            <marker id="arr-ui-clean" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#9b8fd8"/></marker>
+            <marker id="arr-cfg-clean" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#d2a85d"/></marker>
+            <marker id="arr-muted-clean" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#29333e"/></marker>
+            </defs>
+            <text x="38" y="34" class="cap">PRIMARY AUTHORITY PATH</text>
+            <rect x="38" y="72" width="298" height="255" rx="14" class="panel"/>
+            <text x="60" y="105" class="title">Absurdly Accurate Clock</text><text x="60" y="128" class="h2">Pico 2 / RP2350</text><text x="60" y="151" class="body">Sole external authoritative source</text>
+            <rect x="60" y="177" width="254" height="55" rx="8" class="sub"/><text x="76" y="198" class="h2">AAC Protocol v1 source</text><text x="76" y="217" class="mono">ACT1 · 40-byte immutable snapshot</text>
+            <rect x="60" y="245" width="254" height="58" rx="8" class="good"/><text x="76" y="267" class="h2">Qualified UTC/PPS boundary</text><text x="76" y="286" class="mono">UTC + PPS identity + TIME_SYNC association</text>
+            <path d="M336 145 C390 145 410 145 463 145" class="mutedline" marker-end="url(#arr-muted-clean)"/><text x="399.5" y="130" text-anchor="middle" class="gapmono">SPI clocks · dummy MOSI</text><text x="399.5" y="163" text-anchor="middle" class="gapsmall">ESP32 controller → Pico</text>
+            <path d="M463 202 C410 202 390 202 336 202" class="auth" marker-end="url(#arr-auth-clean)"/><text x="399.5" y="188" text-anchor="middle" class="gapmono">40-byte ACT1 snapshot</text><text x="399.5" y="220" text-anchor="middle" class="gapsmall">Pico → ESP32 over MISO</text>
+            <path d="M336 269 C390 269 410 269 463 269" class="auth" marker-end="url(#arr-auth-clean)"/><text x="399.5" y="252" text-anchor="middle" class="gapmono">TIME_SYNC rising edge</text><text x="399.5" y="283" text-anchor="middle" class="gapsmall">software-delayed</text><text x="399.5" y="294" text-anchor="middle" class="gapsmall">boundary association</text>
+            <rect x="463" y="72" width="526" height="512" rx="16" class="panel"/>
+            <text x="489" y="105" class="title">AAC Time Bridge</text><text x="489" y="128" class="h2">ESP32 / NodeMCU-32S</text><text x="489" y="151" class="body">Network appliance · read-only consumer of AAC authority</text>
+            <rect x="489" y="179" width="210" height="88" rx="10" class="sub"/><text x="506" y="203" class="h2">1 · Protocol acquisition</text><text x="506" y="223" class="mono">SPI mode 1 · 100 kHz</text><text x="506" y="241" class="mono">magic/version/length/CRC</text><text x="506" y="257" class="mono">flags + sequences + epoch</text>
+            <rect x="728" y="179" width="233" height="88" rx="10" class="sub"/><text x="745" y="203" class="h2">2 · Edge association</text><text x="745" y="223" class="mono">capture TIME_SYNC edge</text><text x="745" y="241" class="mono">apply sync_delay_us relationship</text><text x="745" y="257" class="mono">pair edge ↔ snapshot boundary</text><path d="M699 223H728" class="auth" marker-end="url(#arr-auth-clean)"/>
+            <rect x="552" y="301" width="345" height="123" rx="11" class="good"/><text x="572" y="327" class="h2">3 · Qualification / authority state</text><text x="572" y="350" class="mono">UTC_VALID · PPS_PRESENT · PPS_LOCKED · SYNC_VALID</text><text x="572" y="371" class="mono">clean edge relationship · sequence continuity</text><text x="572" y="392" class="mono">freshness deadline: 1.5 s</text><text x="572" y="412" class="body">Responding is not the same as qualified.</text><path d="M594 267V301" class="auth" marker-end="url(#arr-auth-clean)"/><path d="M844 267V301" class="auth" marker-end="url(#arr-auth-clean)"/>
+            <rect x="489" y="454" width="222" height="100" rx="10" class="sub"/><text x="506" y="478" class="h2">Central appliance state</text><text x="506" y="498" class="mono">qualified UTC anchor</text><text x="506" y="516" class="mono">source / network / reset</text><text x="506" y="534" class="mono">watchdog / build / uptime</text>
+            <rect x="741" y="454" width="220" height="100" rx="10" class="sub"/><text x="758" y="478" class="h2">LAN NTP service</text><text x="758" y="498" class="mono">UDP/123 · NTP v3/v4</text><text x="758" y="516" class="mono">qualified: Stratum 1</text><text x="758" y="534" class="mono">Reference ID: “AAC ”</text><path d="M724 424V438H600V454" class="auth" marker-end="url(#arr-auth-clean)"/><path d="M711 504H741" class="auth" marker-end="url(#arr-auth-clean)"/><text x="726" y="490" text-anchor="middle" class="mono">qualified UTC</text>
+            <rect x="1080" y="123" width="260" height="182" rx="14" class="panel"/><text x="1102" y="155" class="title">Infrastructure LAN</text><text x="1102" y="180" class="body">Normal station Wi-Fi / LAN address</text><rect x="1102" y="202" width="216" height="77" rx="9" class="sub"/><text x="1120" y="226" class="h2">NTP clients</text><text x="1120" y="247" class="mono">workstations · servers · devices</text><text x="1120" y="265" class="mono">basic NTP v3/v4 requests</text><path d="M961 504 C1040 504 1030 241 1102 241" class="ntp" marker-end="url(#arr-ntp-clean)"/><text x="1033" y="370" text-anchor="middle" class="mono">NTP · UDP/123</text><text x="1033" y="388" text-anchor="middle" class="body">derived from qualified AAC clock state</text>
+            <rect x="1080" y="345" width="260" height="148" rx="14" class="panel"/><text x="1102" y="376" class="h2">Local WebUI / browser</text><text x="1102" y="399" class="body">Presentation + management client</text><text x="1102" y="424" class="mono">GET /telemetry ≈ 1×/s</text><text x="1102" y="444" class="mono">latest bounded snapshot only</text><text x="1102" y="466" class="body">Browser never becomes a clock authority.</text><path d="M711 524 C860 524 980 419 1080 419" class="ui" marker-end="url(#arr-ui-clean)"/>
+            <rect x="38" y="384" width="372" height="200" rx="14" class="warn"/><text x="60" y="416" class="title">Fail-safe: UNSYNCHRONIZED</text><text x="60" y="443" class="body">Authority is withdrawn on invalid, unqualified, stale,</text><text x="60" y="459" class="body">or discontinuous source state.</text><text x="60" y="483" class="mono">LI = 3</text><text x="140" y="483" class="mono">Stratum 16</text><text x="245" y="483" class="mono">Reference ID “INIT”</text><text x="60" y="507" class="mono">reference / receive / transmit timestamps = 0</text><text x="60" y="532" class="body">Wi-Fi, WebUI, watchdog and appliance execution continue.</text><text x="60" y="555" class="body">No Internet NTP, ESP32 wall clock, browser clock,</text><text x="60" y="573" class="body">stale-time or synthetic-authority fallback exists.</text><path d="M552 363 C470 363 448 440 410 440" class="cfg" marker-end="url(#arr-cfg-clean)"/><text x="468" y="400" text-anchor="middle" class="mono">qualification lost</text>
+            <rect x="1080" y="538" width="260" height="142" rx="14" class="panel"/><text x="1102" y="568" class="h2">Recovery / provisioning</text><text x="1102" y="592" class="mono">AAC-Bridge-XXXXXX</text><text x="1102" y="612" class="mono">192.168.4.1</text><text x="1102" y="637" class="body">Configuration and recovery only.</text><text x="1102" y="657" class="body">NTP is not exposed on the setup AP.</text><path d="M711 544 C875 560 982 608 1080 608" class="cfg" marker-end="url(#arr-cfg-clean)"/>
+            <rect x="463" y="628" width="526" height="116" rx="14" class="panel"/><text x="489" y="658" class="cap">SECONDARY APPLIANCE FUNCTIONS</text><rect x="489" y="677" width="225" height="46" rx="8" class="sub"/><text x="505" y="697" class="h2">30 s application watchdog</text><text x="505" y="714" class="body">Recovery not yet hardware bench-validated</text><rect x="739" y="677" width="222" height="46" rx="8" class="sub"/><text x="755" y="697" class="h2">GPIO16 status LED</text><text x="755" y="714" class="body">Consumes centralized appliance state</text>
+            <rect x="38" y="628" width="372" height="116" rx="14" class="panel"/><text x="60" y="658" class="cap">IMPLEMENTATION / VALIDATION</text><text x="60" y="684" class="body">SPI/TIME_SYNC acquisition: implemented + bench-confirmed</text><text x="60" y="704" class="body">Qualified AAC UTC + sequence/phase association: confirmed</text><text x="60" y="724" class="body">Absolute UTC error: not yet physically qualified</text>
+            <line x1="1035" y1="731" x2="1077" y2="731" class="auth"/><text x="1087" y="735" class="body">authoritative timing/data</text><line x1="1200" y1="731" x2="1242" y2="731" class="ntp"/><text x="1252" y="735" class="body">LAN NTP</text><line x1="1035" y1="756" x2="1077" y2="756" class="ui"/><text x="1087" y="760" class="body">WebUI/status</text><line x1="1200" y1="756" x2="1242" y2="756" class="cfg"/><text x="1252" y="760" class="body">recovery/config</text>
+            </svg>
+          </figure>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="authority-heading">
+          <h2 id="authority-heading">Authoritative time and qualification</h2>
+          <p>The AAC clock-source endpoint is the SPI peripheral; the ESP32 is its SPI controller. AAC Protocol v1 is a read-only 40-byte snapshot with an <code>ACT1</code> signature, version and length fields, quality flags, packet/boundary/synchronization sequences, UTC seconds, and CRC-32. The controller clocks it in SPI mode 1 at 100 kHz with zero-valued MOSI bytes. Chip select selects an immutable published snapshot, so one transfer cannot mix fields from different publications. The source protocol is maintained by the Absurdly Accurate Clock project; this repository carries a synchronized copy for the consumer implementation.</p>
+          <p>A packet alone does not establish a usable time reference. The ESP32 timestamps each rising TIME_SYNC edge, waits for the required post-edge publication interval, then reads and pairs the resulting snapshot with that edge. The packet's sync_delay_us relates TIME_SYNC to the corresponding authoritative UTC/PPS boundary. A snapshot is accepted only if the transaction was not raced by another edge. Qualification requires UTC_VALID, PPS_PRESENT, PPS_LOCKED, and SYNC_VALID, a clean edge relationship, and continuous boundary and synchronization sequence progression. Repeated reads do not count as new seconds.</p>
+          <p>The accepted UTC anchor is checked again when consumed and expires if no qualifying edge arrives within 1.5 seconds. Invalid packets or flags, sequence gaps, ambiguous edge pairing, transport failures, or a Pico reset clear the selected anchor and return the state to UNSYNCHRONIZED. A zero epoch with UTC_VALID clear is an invalid sentinel, not a date. No holdover is implemented. TIME_SYNC is a software-delivered boundary reference with a measured source-side delay field; it is not a zero-latency copy of GPS PPS. The bridge reports source qualification and protocol-derived timing state; it does not claim independently measured absolute UTC accuracy.</p>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="network-time-heading">
+          <h2 id="network-time-heading">LAN network-time service</h2>
+          <p>When station Wi-Fi has a usable LAN address, the appliance listens for basic NTP v3/v4 requests on UDP port 123, bound to that infrastructure address. It derives NTP timestamps from the qualified TIME_SYNC-linked UTC and monotonic-time anchor; it never reads the ESP32 wall clock. Qualified replies use stratum 1 and the reference ID <code>AAC </code>, reflecting their direct reference to the GPS-disciplined clock.</p>
+          <p>When AAC authority is absent, replies explicitly signal unsynchronized status: LI=3, stratum 16, reference ID <code>INIT</code>, and zero reference, receive, and transmit timestamps. The client’s originate timestamp is still echoed. Qualification is checked for each request, so loss of source authority withdraws valid time and a later qualified relationship can restore it. The setup/recovery access point does not expose NTP.</p>
+          <p>On 2026-09-28, a LAN characterization recorded qualified stratum-1 responses for 100 of 100 requests. Client/server NTP offset measured during this LAN test, relative to a T470 system clock, ranged from −2.458 to +81.181 ms; mean offset was +34.915 ms. That is a functional LAN test against that host, not an absolute UTC error measurement. Independent measurement against the AAC/GPS PPS boundary remains outstanding.</p>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="webui-heading">
+          <h2 id="webui-heading">WebUI and appliance state</h2>
+          <p>The local single-page WebUI presents a snapshot of clock qualification, source/phase/sequence diagnostics, network state, reset and watchdog details, build identity, and uptime. Its <code>/telemetry</code> endpoint returns the latest bounded appliance snapshot about once per second. Each response rechecks whether the AAC-derived UTC anchor is still qualified. The browser formats the returned UTC second; it does not advance time locally, and the displayed time clears when authority is invalid or a telemetry request fails.</p>
+          <p>The same centralized state feeds the WebUI, serial reporting, and GPIO16 status indicator. This keeps indicators and diagnostics as consumers of appliance state instead of separate time authorities. The indicator distinguishes normal LAN operation with qualified AAC time, a responding but unqualified source, an unavailable source, and network/recovery-AP conditions.</p>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="provisioning-heading">
+          <h2 id="provisioning-heading">Provisioning, failure, and recovery</h2>
+          <p>With no stored Wi-Fi credentials, the appliance starts an open setup access point named <code>AAC-Bridge-XXXXXX</code> at <code>192.168.4.1</code>. An operator enters the target 2.4 GHz network credentials in the local page; the form also supports hidden SSIDs. After the ESP32 joins the infrastructure network and has a LAN address, it announces that address over Serial and shuts down the setup AP. With saved credentials it tries station mode first, retries connection, and starts the recovery AP after 60 seconds disconnected. Successful reconnection turns the AP off without erasing credentials. Wi-Fi failure does not make the clock valid or request a reboot.</p>
+          <p>Normal reboot and factory reset are explicit POST management actions. Reboot preserves stored configuration. Confirmed factory reset clears the appliance-owned configuration namespace and returns to setup; a storage error is reported without scheduling the reset. An emergency serial factory-reset path is also documented. These are service controls, not alternate time-recovery mechanisms.</p>
+          <p>The 30-second application task watchdog is fed only after a complete application poll pass. Source loss, invalid time, and Wi-Fi outages do not deliberately trigger it. Following any reset, clock authority and edge association start untrusted and must be qualified again from AAC. Watchdog integration is implemented; explicit deliberate-wedge recovery testing remains to be completed.</p>
+        </section>
+
+        <section class="case-study-section" aria-labelledby="validation-heading">
+          <h2 id="validation-heading">Implementation and validation</h2>
+          <p>The repository records hardware exercise of the v1 SPI/TIME_SYNC path on a production NodeMCU ESP-32S: ACT1 packet and CRC validation, AAC authority and quality qualification, phase association, and sequence progression were confirmed. Operator bench checks also covered first-time open-AP provisioning, joining the LAN, normal web reboot with configuration retained, confirmed factory reset back to setup, and reprovisioning.</p>
+          <p>Host tests cover protocol vectors and corruption rejection, qualification policy, state rendering, and bounded transport behavior. The repository’s LAN NTP test establishes request/reply behavior and observed network timing for that setup, but absolute timing error against the physical AAC/GPS boundary remains unqualified. The latest live telemetry UI and diagnostic-cadence changes still need browser and serial bench checks, and watchdog recovery still needs hardware validation.</p>
+        </section>
+      </div>
+      <nav class="project-return-nav" aria-label="Project navigation">
+        <a class="dim8-link" href="../../">← Portfolio</a>
+      </nav>
+      <noscript><p class="interior-note">JavaScript is needed for the navigation.</p></noscript>
+    </main>
+  </body>
+</html>

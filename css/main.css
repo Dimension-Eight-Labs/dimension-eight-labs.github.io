@@ -53,7 +53,7 @@ h1 {
 }
 
 .logo-frame {
-  width: min(540px, 92vw);
+  width: min(540px, 92vw, 100%);
   aspect-ratio: 25 / 18;
   margin: 0 auto 1.2rem;
   overflow: hidden;
@@ -75,7 +75,19 @@ h1 {
   line-height: 1.65;
 }
 
-.github-link {
+.landing-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+}
+
+/* Shared textual link language; retain the landing page's original class as an alias. */
+.github-link,
+.dim8-link,
+.dim8-link:link,
+.dim8-link:visited {
   display: inline-block;
   color: var(--color-muted);
   font-size: 0.875rem;
@@ -85,13 +97,32 @@ h1 {
   transition: color var(--transition-speed) ease;
 }
 
-.github-link:hover {
+.github-link:hover,
+.dim8-link:hover {
   color: var(--color-text);
 }
 
-.github-link:focus-visible {
+.github-link:focus-visible,
+.dim8-link:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 4px;
+}
+
+/* Contact opens a dialog, but its trigger uses the same textual link treatment. */
+button.dim8-link {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+  text-align: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  cursor: pointer;
 }
 
 .vfd-startup {
@@ -108,8 +139,7 @@ html.vfd-intro-pending .vfd-startup {
   pointer-events: auto;
 }
 
-html.vfd-intro-pending .vfd-startup__display,
-html.vfd-intro-pending .vfd-startup__skip {
+html.vfd-intro-pending .vfd-startup__display {
   visibility: hidden;
 }
 
@@ -216,23 +246,25 @@ html.vfd-intro-pending .vfd-startup__skip {
 
 .vfd-startup__skip {
   position: absolute;
+  z-index: 2;
   right: clamp(1rem, 3vw, 2rem);
   bottom: clamp(1rem, 3vw, 2rem);
-  padding: 0.25rem 0;
-  border: 0;
-  border-bottom: 1px solid #46514f;
-  border-radius: 0;
-  background: transparent;
-  color: #667875;
+  padding: 0.8rem 1.25rem;
+  border: 1px solid var(--color-caption);
+  border-radius: 999px;
+  background: rgb(1 1 0 / 82%);
+  color: var(--color-text);
   font: inherit;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 1.03125rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
   cursor: pointer;
 }
 
 .vfd-startup__skip:hover {
-  color: var(--color-caption);
-  border-color: var(--color-muted);
+  color: var(--color-text);
+  border-color: var(--color-text);
+  background: rgb(184 221 215 / 6%);
 }
 
 .vfd-startup__skip:focus-visible {
@@ -248,10 +280,6 @@ html.vfd-intro-pending .vfd-startup__skip {
 .vfd-startup.state-black-hold .vfd-startup__heaters,
 .vfd-startup.state-black-hold .vfd-startup__cursor {
   opacity: 0;
-}
-
-.vfd-startup.state-black-hold .vfd-startup__skip {
-  visibility: hidden;
 }
 
 .vfd-startup.state-heater .vfd-startup__heaters {
@@ -376,8 +404,3 @@ html.vfd-intro-pending .vfd-startup__skip {
 .vfd-startup.state-shutdown-black .vfd-startup__display {
   opacity: 0;
 }
-
-.vfd-startup.state-shutdown-black .vfd-startup__skip {
-  visibility: hidden;
-}
-

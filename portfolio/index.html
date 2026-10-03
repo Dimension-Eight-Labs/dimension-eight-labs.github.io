@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Rob Haag's engineering portfolio at Dimension Eight Labs.">
+    <title>Portfolio — Dimension Eight Labs</title>
+    <link rel="stylesheet" href="../css/main.css?v=interior-content-4">
+    <link rel="stylesheet" href="../css/interior.css?v=interior-content-4">
+    <script src="../js/interior.js?v=interior-content-4" defer></script>
+  </head>
+  <body class="interior-page">
+    <a class="dim8-link skip-link" href="#main-content">Skip to content →</a>
+    <dim8-header current-page="portfolio"></dim8-header>
+    <main id="main-content" class="interior-main" tabindex="-1" aria-label="Portfolio">
+      <div class="identity-strip">
+        <div class="identity-group">
+          <h1>Rob Haag</h1>
+          <a class="dim8-link resume-link" href="../images/document-assets/Rob_Haag_Resume.pdf">
+            <svg class="pdf-document" viewBox="0 0 32 38" aria-hidden="true" focusable="false">
+              <path d="M3 1.5h16L29 11v25.5H3z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M19 1.5V11h10M8 16h16" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <text x="16" y="30" text-anchor="middle" fill="var(--content-heading)" font-size="12" font-weight="600" letter-spacing="0">PDF</text>
+            </svg>
+            Rob's Resume →
+          </a>
+        </div>
+        <div class="identity-group identity-group--details">
+          <button class="dim8-link" type="button" data-contact-open aria-haspopup="dialog" aria-controls="contact-dialog">Contact →</button>
+          <span class="location">Grove City, OH</span>
+        </div>
+      </div>
+      <div id="portfolio-projects" class="portfolio-projects">
+        <!-- Repeat this image-first article structure for future projects.
+             Shared CSS alternates the columns on desktop and restores image-first on mobile. -->
+        <article class="project-entry" aria-labelledby="project-clock-title">
+          <a class="project-media" href="projects/absurdly-accurate-clock/" aria-label="Absurdly Accurate Clock — Project Details" style="--project-image-ratio: 1672 / 941;">
+            <img src="../images/AAC-Clock-Project-Page-Image.png" width="1672" height="941" alt="Absurdly Accurate Clock project visualization showing the VFD and prototype electronics on a workbench." decoding="async">
+          </a>
+          <div class="project-copy">
+            <h2 id="project-clock-title" class="project-title">Absurdly Accurate Clock</h2>
+            <p class="project-summary">A GPS/PPS-disciplined embedded clock built around the Raspberry Pi Pico 2. The firmware maintains an authoritative UTC timebase independent of the display, drives a Posiflex serial VFD through an RS-232 interface, and provides a defined interface for an ESP32 network-time appliance. Designed as a timing system first and a clock display second.</p>
+            <div class="project-actions">
+              <a class="dim8-link" href="projects/absurdly-accurate-clock/">Project Details →</a>
+              <a class="dim8-link" href="https://github.com/rhaag71/absurdly-accurate-clock" target="_blank" rel="noopener noreferrer">GitHub →</a>
+            </div>
+          </div>
+        </article>
+        <!-- TEMPORARY: Remove entries 3–4 and the shared placeholder detail route after layout evaluation.
+             These entries represent no real projects or repositories. -->
+        <article class="project-entry" aria-labelledby="project-aac-time-bridge-title">
+          <a class="project-media" href="projects/aac-time-bridge/" aria-label="AAC Time Bridge — Project Details" style="--project-image-ratio: 1350 / 1511;">
+            <img src="../images/AAC-BRIDGE-WEBUI-Screenshot.png" width="1350" height="1511" alt="AAC Time Bridge WebUI showing source qualification, network state, and timing diagnostics." decoding="async">
+          </a>
+          <div class="project-copy">
+            <h2 id="project-aac-time-bridge-title" class="project-title">AAC Time Bridge</h2>
+            <p class="project-summary">An ESP32 network time appliance for the Absurdly Accurate Clock. It consumes qualified UTC from the RP2350-based clock over the AAC SPI/TIME_SYNC interface and serves it to the local network as NTP, while providing a local WebUI for source qualification, network state, timing diagnostics, and appliance management.</p>
+            <div class="project-actions">
+              <a class="dim8-link" href="projects/aac-time-bridge/">Project Details →</a>
+              <a class="dim8-link" href="https://github.com/rhaag71/aac-time-bridge" target="_blank" rel="noopener noreferrer">GitHub →</a>
+            </div>
+          </div>
+        </article>
+        <article class="project-entry" aria-labelledby="placeholder-project-3-title" data-temporary-project>
+          <a class="project-media" href="projects/placeholder/?project=3" aria-label="Placeholder Project 3 — Project Details">
+            <span class="project-image-placeholder" aria-hidden="true">Project image placeholder</span>
+          </a>
+          <div class="project-copy">
+            <h2 id="placeholder-project-3-title" class="project-title">Placeholder Project 3</h2>
+            <p class="project-summary">Project summary placeholder.</p>
+            <div class="project-actions">
+              <a class="dim8-link" href="projects/placeholder/?project=3">Project Details →</a>
+              <a class="dim8-link" href="#placeholder-project-3-github" aria-describedby="placeholder-project-3-github">GitHub →</a>
+            </div>
+            <p id="placeholder-project-3-github" class="interior-note pending-notice" role="status">Temporary layout entry; no GitHub repository is configured.</p>
+          </div>
+        </article>
+        <article class="project-entry" aria-labelledby="placeholder-project-4-title" data-temporary-project>
+          <a class="project-media" href="projects/placeholder/?project=4" aria-label="Placeholder Project 4 — Project Details">
+            <span class="project-image-placeholder" aria-hidden="true">Project image placeholder</span>
+          </a>
+          <div class="project-copy">
+            <h2 id="placeholder-project-4-title" class="project-title">Placeholder Project 4</h2>
+            <p class="project-summary">Project summary placeholder.</p>
+            <div class="project-actions">
+              <a class="dim8-link" href="projects/placeholder/?project=4">Project Details →</a>
+              <a class="dim8-link" href="#placeholder-project-4-github" aria-describedby="placeholder-project-4-github">GitHub →</a>
+            </div>
+            <p id="placeholder-project-4-github" class="interior-note pending-notice" role="status">Temporary layout entry; no GitHub repository is configured.</p>
+          </div>
+        </article>
+      </div>
+      <noscript><p class="interior-note">JavaScript is needed for the navigation and contact form.</p></noscript>
+    </main>
+
+    <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-title" aria-describedby="contact-status">
+      <div class="contact-heading">
+        <h2 id="contact-title">Contact</h2>
+        <button class="modal-control" type="button" data-contact-close aria-label="Close contact form">Close</button>
+      </div>
+      <!-- TODO: Connect submission after the delivery mechanism is selected. No endpoint is configured. -->
+      <form class="contact-form" method="dialog" data-contact-form>
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="name" autocomplete="name" required autofocus>
+        <label for="contact-email">Email</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" required>
+        <label for="contact-subject">Subject</label>
+        <input id="contact-subject" name="subject" required>
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="5" required></textarea>
+        <p id="contact-status" class="interior-note" role="status">Sending is not connected yet.</p>
+        <button class="form-submit" type="submit">Send message</button>
+      </form>
+    </dialog>
+  </body>
+</html>

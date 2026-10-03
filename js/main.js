@@ -213,8 +213,10 @@
     runCursorLeadIn();
   };
 
-  function skipIntro() {
+  function skipIntro(event) {
+    event.preventDefault();
     revealHomepage(true);
+    window.location.assign(skip.href);
   }
 
   const advance = () => {

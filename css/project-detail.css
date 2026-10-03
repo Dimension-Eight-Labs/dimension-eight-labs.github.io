@@ -1,0 +1,57 @@
+/* Case-study flow only. Colors, typography, links, width and shell stay shared. */
+.case-study-image,
+.case-study-architecture {
+  width: 100%;
+  color: var(--content-secondary);
+  text-align: center;
+}
+
+.case-study-image {
+  margin: var(--space-md) 0 0;
+  text-align: left;
+}
+
+.case-study-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.case-study-image figcaption,
+.case-study-architecture figcaption {
+  margin-top: var(--space-xs);
+}
+
+.case-study-architecture {
+  margin: var(--space-md) 0 0;
+  text-align: left;
+}
+
+.case-study-section + .case-study-section {
+  margin-top: var(--space-lg);
+}
+
+.case-study-section h2 {
+  margin-bottom: var(--space-sm);
+}
+
+.case-study-section h3 {
+  margin-bottom: var(--space-xs);
+}
+
+.case-study-section p {
+  margin-block: 0 var(--space-sm);
+}
+
+.case-study-section p:last-child {
+  margin-bottom: 0;
+}
+
+.project-detail .project-actions .dim8-link,
+.project-detail .project-return-nav .dim8-link {
+  font-size: 1.75rem;
+}
+
+.project-return-nav {
+  margin-top: var(--space-lg);
+}

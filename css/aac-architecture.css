@@ -1,0 +1,28 @@
+/* SVG artwork styles extracted from the standalone architecture source.
+   Keep every selector and palette variable scoped to this diagram. */
+.aac-architecture-diagram {
+  --aac-arch-bg:#090c10; --aac-arch-panel:#0e1319; --aac-arch-card:#121922; --aac-arch-text:#e8edf2;
+  --aac-arch-muted:#8f9ba7; --aac-arch-border:#29333e; --aac-arch-cyan:#69d8e7; --aac-arch-blue:#6f9fda;
+
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  background: var(--aac-arch-panel);
+}
+
+.aac-architecture-diagram .box{fill:var(--aac-arch-card);stroke:var(--aac-arch-border);stroke-width:1.3}
+.aac-architecture-diagram .box2{fill:#101720;stroke:var(--aac-arch-border);stroke-width:1.1}
+.aac-architecture-diagram .dash{fill:transparent;stroke:var(--aac-arch-border);stroke-width:1.2;stroke-dasharray:7 6}
+.aac-architecture-diagram .wire{fill:none;stroke:var(--aac-arch-muted);stroke-width:1.7;marker-end:url(#aac-architecture-arrow)}
+.aac-architecture-diagram .wire2{fill:none;stroke:var(--aac-arch-cyan);stroke-width:2;marker-end:url(#aac-architecture-arrow-c)}
+.aac-architecture-diagram .wire3{fill:none;stroke:var(--aac-arch-blue);stroke-width:2;marker-end:url(#aac-architecture-arrow-b)}
+.aac-architecture-diagram .power{stroke-dasharray:5 4}
+.aac-architecture-diagram .t1{font:600 17px ui-sans-serif,system-ui;fill:var(--aac-arch-text)}
+.aac-architecture-diagram .t2{font:600 13px ui-sans-serif,system-ui;fill:var(--aac-arch-text)}
+.aac-architecture-diagram .tm{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--aac-arch-muted)}
+.aac-architecture-diagram .ts{font:11px ui-sans-serif,system-ui;fill:var(--aac-arch-muted)}
+.aac-architecture-diagram .tiny{font:10px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--aac-arch-muted)}
+.aac-architecture-diagram .tag{font:600 10px ui-sans-serif,system-ui;letter-spacing:.08em;fill:var(--aac-arch-muted)}
+.aac-architecture-diagram .section{font:600 12px ui-sans-serif,system-ui;letter-spacing:.12em;fill:var(--aac-arch-muted)}

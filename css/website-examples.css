@@ -1,0 +1,95 @@
+.website-examples {
+  padding-block: var(--space-lg);
+}
+
+.website-examples > h1 {
+  margin-bottom: var(--space-lg);
+}
+
+.website-examples__list {
+  display: grid;
+  row-gap: clamp(4rem, 8vw, 7rem);
+}
+
+.website-example {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  margin: 0;
+}
+
+.website-example__image-link {
+  display: block;
+  line-height: 0;
+}
+
+.website-example img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: brightness(0.85);
+  transition: filter 180ms ease;
+}
+
+.website-example__image-link:hover img,
+.website-example__image-link:focus-visible img {
+  filter: brightness(1);
+}
+
+.website-example__info {
+  position: absolute;
+  z-index: 2;
+  right: -1rem;
+  bottom: -1.25rem;
+  width: min(35%, 26rem);
+  padding: 1.25rem 1.5rem 1.35rem;
+  background: var(--color-caption);
+  clip-path: polygon(1.5rem 0, 100% 0, 100% 100%, 0 100%, 0 1.5rem);
+  filter: drop-shadow(0 0.65rem 1rem rgb(0 0 0 / 28%));
+  color: var(--content-text);
+}
+
+.website-example__info::before {
+  position: absolute;
+  z-index: -1;
+  inset: 1px;
+  background: #111718;
+  clip-path: polygon(calc(1.5rem - 1px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(1.5rem - 1px));
+  content: "";
+}
+
+.website-example__info h2 {
+  font-size: 1.125rem;
+}
+
+.website-example__info > * {
+  position: relative;
+}
+
+.website-example__info p {
+  margin: 0.375rem 0 0.625rem;
+  color: var(--content-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 58rem) {
+  .website-examples__list {
+    row-gap: var(--space-lg);
+  }
+
+  .website-example__info {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: calc(100% - 1rem);
+    max-width: 34rem;
+    margin: var(--space-sm) 0 0 auto;
+    padding: 1rem 1.125rem 1.125rem;
+    clip-path: polygon(1.125rem 0, 100% 0, 100% 100%, 0 100%, 0 1.125rem);
+  }
+
+  .website-example__info::before {
+    clip-path: polygon(calc(1.125rem - 1px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(1.125rem - 1px));
+  }
+}
