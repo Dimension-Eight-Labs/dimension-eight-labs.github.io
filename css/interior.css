@@ -85,6 +85,14 @@ dim8-header {
   gap: var(--space-sm) var(--space-md);
 }
 
+.site-nav .dim8-link[aria-current="page"] {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--interior-rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.45em;
+}
+
 .modal-control {
   display: inline-flex;
   align-items: center;

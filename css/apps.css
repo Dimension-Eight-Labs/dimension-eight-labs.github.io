@@ -1,0 +1,230 @@
+/* App pages extend the shared portfolio vocabulary without changing engineering pages. */
+.apps-index {
+  padding-block: var(--space-lg);
+}
+
+.apps-introduction {
+  max-width: 48rem;
+  margin-bottom: var(--space-lg);
+}
+
+.apps-introduction p,
+.app-lede {
+  margin: var(--space-xs) 0 0;
+  color: var(--content-secondary);
+}
+
+.apps-list {
+  padding-block: 0;
+}
+
+/* Phone screenshots keep their natural tall proportions without dominating a row. */
+.app-entry__media {
+  width: min(100%, 21rem);
+  justify-self: center;
+}
+
+.app-entry__media img,
+.app-gallery img {
+  border: 1px solid var(--interior-rule);
+  background: #080b0c;
+}
+
+.app-eyebrow {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-caption);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.app-platforms {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 30rem;
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.app-platforms li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgb(82 102 107 / 55%);
+}
+
+.app-platforms strong {
+  color: var(--content-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.app-detail__actions {
+  align-items: center;
+}
+
+.project-detail .project-actions .app-action--primary {
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--color-caption);
+  color: var(--color-text);
+}
+
+.project-detail .project-actions .app-action--primary:hover {
+  border-color: var(--color-text);
+}
+
+.app-detail__content {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.app-detail__content .case-study-section + .case-study-section {
+  margin-top: 0;
+}
+
+.app-platforms--detail {
+  margin-top: var(--space-sm);
+}
+
+.app-feature-list {
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+}
+
+.app-screenshots,
+.app-screenshots > h2 {
+  max-width: none;
+}
+
+.app-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1rem, 4vw, 3rem);
+  margin-top: var(--space-sm);
+}
+
+.app-gallery figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.app-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.app-gallery figcaption {
+  margin-top: var(--space-xs);
+}
+
+.app-install__intro {
+  margin-bottom: var(--space-sm);
+}
+
+.app-install__tabset {
+  max-width: 44rem;
+}
+
+.app-install__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 28rem);
+  border: 1px solid var(--interior-rule);
+}
+
+.app-install__tab {
+  min-width: 0;
+  padding: 0.65rem var(--space-sm);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--content-secondary);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.app-install__tab + .app-install__tab {
+  border-left: 1px solid var(--interior-rule);
+}
+
+.app-install__tab[aria-selected="true"] {
+  background: rgb(151 181 176 / 12%);
+  color: var(--color-text);
+}
+
+.app-install__tab:hover {
+  color: var(--color-text);
+}
+
+.app-install__panel {
+  max-width: 44rem;
+  padding: var(--space-md) 0 0;
+}
+
+.app-install__panel[hidden] {
+  display: none;
+}
+
+.app-install__panel h3 {
+  margin-bottom: var(--space-xs);
+}
+
+.app-install__panel ol {
+  margin: 0 0 var(--space-sm);
+  padding-left: 1.35rem;
+}
+
+.app-install__panel li + li {
+  margin-top: 0.3rem;
+}
+
+.app-install__panel a {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-underline-offset: 0.2em;
+}
+
+.app-install__panel p,
+.app-install__offline-note {
+  margin-bottom: 0;
+  color: var(--content-secondary);
+}
+
+.app-install__offline-note {
+  margin-top: var(--space-md);
+}
+
+@media (max-width: 40rem) {
+  .app-entry__media {
+    width: min(100%, 18rem);
+  }
+
+  .app-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .app-gallery figure {
+    width: min(100%, 24rem);
+  }
+}
+
+@media (max-width: 24rem) {
+  .app-platforms li {
+    display: grid;
+    gap: 0;
+  }
+
+  .app-install__tab {
+    padding-inline: var(--space-xs);
+    font-size: 0.8125rem;
+  }
+}

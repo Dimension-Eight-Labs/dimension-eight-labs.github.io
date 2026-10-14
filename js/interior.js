@@ -6,6 +6,7 @@
     connectedCallback() {
       const currentPage = this.getAttribute("current-page");
       const portfolioUrl = new URL("portfolio/", siteRoot).href;
+      const appsUrl = new URL("apps/", siteRoot).href;
       const examplesUrl = new URL("website-examples/", siteRoot).href;
       const logoUrl = new URL("images/dim8-vfd-logo.png", siteRoot).href;
 
@@ -20,6 +21,7 @@
             </a>
             <nav class="site-nav" aria-label="Primary">
               <a class="dim8-link" href="${portfolioUrl}"${currentPage === "portfolio" ? ' aria-current="page"' : ""}>Portfolio →</a>
+              <a class="dim8-link" href="${appsUrl}"${currentPage === "apps" ? ' aria-current="page"' : ""}>Apps →</a>
               <a class="dim8-link" href="${examplesUrl}"${currentPage === "website-examples" ? ' aria-current="page"' : ""}>Website Examples →</a>
             </nav>
           </div>

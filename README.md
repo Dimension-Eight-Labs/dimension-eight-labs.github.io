@@ -17,6 +17,7 @@ The site is deployed through GitHub Pages at the custom domain <https://dim8labs
 ## Interior pages
 
 - `/portfolio/` is the interior root, with Rob Haag's identity strip and reusable engineering project rows.
+- `/apps/` is the applications index; each application has a permanent detail route such as `/apps/solitaire/`.
 - `/portfolio/projects/absurdly-accurate-clock/` is the first project's engineering case study.
 - `/website-examples/` is a placeholder for the separately planned examples page.
 - `js/interior.js` defines the shared `<dim8-header current-page="…">` component and the contact dialog interaction. Future interior pages should load this script and `css/interior.css` after `css/main.css`, and use `body.interior-page` and `main.interior-main`. Header links resolve from the script URL. Do not load the landing animation script on interior pages.
@@ -52,5 +53,11 @@ The case study summarizes [absurdly-accurate-clock](https://github.com/rhaag71/a
 The newer protocol and final acceptance record supersede the overview's older pre-acceptance transport notes. Implemented source/interface behavior is separated from physical observations, test procedures and future work. The page makes no absolute timing or end-to-end NTP accuracy claim; holdover remains future work and leap-second handling is unsupported. When updating the page, recheck the relevant documents and preserve these evidence distinctions.
 
 Intentional TODO in `portfolio/index.html`: connect contact submission once a delivery mechanism is chosen. The form currently validates fields, reports that sending is not connected, and makes no submission request.
+
+## Adding applications
+
+Repeat the `.project-entry.app-entry` article in `apps/index.html`, keeping the screenshot before the copy so the shared responsive layout remains image-first on small screens. Give the app a permanent directory under `apps/`, a unique heading ID, a concise summary, and only the platform and external-link fields that apply. Never show a planned native platform as available or add a store link before its listing exists.
+
+App detail pages reuse the interior shell, `css/project-detail.css`, and `css/apps.css`. The latter provides optional platform rows, feature lists, prominent/secondary actions, a responsive `.app-gallery`, and compact installation tabs. `js/apps.js` progressively enhances any `[data-tabset]` with click and keyboard interaction; without JavaScript, every instruction panel remains visible. Store each app's artwork together under `images/mobile-apps/<app-slug>/`; include intrinsic `width` and `height` and meaningful alternative text so screenshots retain their aspect ratio. Add or remove sections, installation platforms, and gallery figures as needed—privacy information, release notes, source repositories, and App Store or Google Play links are optional, and apps do not need a fixed number of screenshots.
 
 There is no build step or existing test suite. Preview with the server above; JavaScript syntax can be checked with `node --check js/interior.js` and `node --check js/main.js`.
