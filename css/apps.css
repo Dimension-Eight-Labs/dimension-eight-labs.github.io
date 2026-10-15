@@ -24,10 +24,35 @@
   justify-self: center;
 }
 
+.app-entry__media--themes {
+  width: min(100%, 31.5rem);
+}
+
 .app-entry__media img,
 .app-gallery img {
   border: 1px solid var(--interior-rule);
   background: #080b0c;
+}
+
+.app-entry__media--themes .app-entry__theme-shot {
+  inset: 0 auto auto 14%;
+  width: 48%;
+  height: 72.4638%;
+  object-fit: contain;
+  z-index: 2;
+}
+
+.app-entry__media--themes .app-entry__theme-shot--dark {
+  inset: 27.5362% auto auto 38%;
+  z-index: 1;
+}
+
+.app-entry__media--themes .app-entry__theme-shot--classic {
+  z-index: 2;
+}
+
+.app-entry {
+  align-items: end;
 }
 
 .app-eyebrow {
