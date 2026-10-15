@@ -52,7 +52,7 @@ The case study summarizes [absurdly-accurate-clock](https://github.com/rhaag71/a
 
 The newer protocol and final acceptance record supersede the overview's older pre-acceptance transport notes. Implemented source/interface behavior is separated from physical observations, test procedures and future work. The page makes no absolute timing or end-to-end NTP accuracy claim; holdover remains future work and leap-second handling is unsupported. When updating the page, recheck the relevant documents and preserve these evidence distinctions.
 
-The Portfolio contact dialog submits through the static-site contact Worker. See [`cloudflare/dim8-contact/README.md`](cloudflare/dim8-contact/README.md) for its configuration, local testing, and deployment notes.
+The Portfolio contact dialog submits through the static-site contact Worker. See [`cloudflare/dim8-contact/README.md`](cloudflare/dim8-contact/README.md) for its configuration, local testing, and deployment notes, and [`docs/contact-email-stack.md`](docs/contact-email-stack.md) for the detailed architecture and operations guide.
 
 ## Adding applications
 

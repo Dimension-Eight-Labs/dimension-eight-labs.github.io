@@ -1,0 +1,9 @@
+# Cloudflare Wrangler local state
+.wrangler/
+
+# Node dependencies
+node_modules/
+
+# Editor / OS noise
+.DS_Store
+*~
