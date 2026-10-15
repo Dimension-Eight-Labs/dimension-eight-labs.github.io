@@ -402,6 +402,11 @@ dim8-header {
   margin-block: var(--space-xs);
 }
 
+#contact-turnstile {
+  min-height: 65px;
+  margin-block: var(--space-xs);
+}
+
 .form-submit {
   justify-self: start;
   padding: 0.625rem var(--space-sm);

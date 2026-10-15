@@ -7,10 +7,10 @@ The static website for Dimension Eight Labs, built with plain HTML, CSS, and min
 From the repository root, run:
 
 ```sh
-python3 -m http.server 8000
+python3 -m http.server 8088
 ```
 
-Then open <http://localhost:8000> in a browser.
+Then open <http://localhost:8088> in a browser.
 
 The site is deployed through GitHub Pages at the custom domain <https://dim8labs.com>.
 
@@ -52,7 +52,7 @@ The case study summarizes [absurdly-accurate-clock](https://github.com/rhaag71/a
 
 The newer protocol and final acceptance record supersede the overview's older pre-acceptance transport notes. Implemented source/interface behavior is separated from physical observations, test procedures and future work. The page makes no absolute timing or end-to-end NTP accuracy claim; holdover remains future work and leap-second handling is unsupported. When updating the page, recheck the relevant documents and preserve these evidence distinctions.
 
-Intentional TODO in `portfolio/index.html`: connect contact submission once a delivery mechanism is chosen. The form currently validates fields, reports that sending is not connected, and makes no submission request.
+The Portfolio contact dialog submits through the static-site contact Worker. See [`cloudflare/dim8-contact/README.md`](cloudflare/dim8-contact/README.md) for its configuration, local testing, and deployment notes.
 
 ## Adding applications
 
@@ -60,4 +60,4 @@ Repeat the `.project-entry.app-entry` article in `apps/index.html`, keeping the 
 
 App detail pages reuse the interior shell, `css/project-detail.css`, and `css/apps.css`. The latter provides optional platform rows, feature lists, prominent/secondary actions, a responsive `.app-gallery`, and compact installation tabs. `js/apps.js` progressively enhances any `[data-tabset]` with click and keyboard interaction; without JavaScript, every instruction panel remains visible. Store each app's artwork together under `images/mobile-apps/<app-slug>/`; include intrinsic `width` and `height` and meaningful alternative text so screenshots retain their aspect ratio. Add or remove sections, installation platforms, and gallery figures as needed—privacy information, release notes, source repositories, and App Store or Google Play links are optional, and apps do not need a fixed number of screenshots.
 
-There is no build step or existing test suite. Preview with the server above; JavaScript syntax can be checked with `node --check js/interior.js` and `node --check js/main.js`.
+The static site has no build step. Preview with the server above; JavaScript syntax can be checked with `node --check js/interior.js` and `node --check js/main.js`. The contact Worker tests run with `node cloudflare/dim8-contact/test/worker.test.mjs`.

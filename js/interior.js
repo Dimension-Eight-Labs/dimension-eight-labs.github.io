@@ -51,7 +51,70 @@
   const openButton = document.querySelector("[data-contact-open]");
   if (!dialog || !openButton) return;
 
-  openButton.addEventListener("click", () => dialog.showModal());
+  const form = dialog.querySelector("[data-contact-form]");
+  const status = dialog.querySelector("#contact-status");
+  const submitButton = form.querySelector(".form-submit");
+  const turnstileMount = dialog.querySelector("#contact-turnstile");
+  const localHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  const contactEndpoint = localHost
+    ? `http://${window.location.hostname}:8787/submit`
+    : "https://dim8-contact.rhaag71.workers.dev/submit";
+  let turnstileLoad;
+  let turnstileWidgetId;
+  let preparingTurnstile = false;
+  let sending = false;
+
+  function loadTurnstile() {
+    if (window.turnstile) return Promise.resolve(window.turnstile);
+    if (turnstileLoad) return turnstileLoad;
+
+    turnstileLoad = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.addEventListener("load", () => {
+        if (window.turnstile) resolve(window.turnstile);
+        else reject(new Error("Turnstile did not initialize."));
+      }, { once: true });
+      script.addEventListener("error", () => {
+        turnstileLoad = null;
+        reject(new Error("Turnstile failed to load."));
+      }, { once: true });
+      document.head.append(script);
+    });
+
+    return turnstileLoad;
+  }
+
+  async function prepareTurnstile() {
+    if (turnstileWidgetId !== undefined || preparingTurnstile) return;
+    preparingTurnstile = true;
+    status.textContent = "Loading the security check…";
+    try {
+      const turnstile = await loadTurnstile();
+      turnstileWidgetId = turnstile.render(turnstileMount, {
+        sitekey: turnstileMount.dataset.sitekey,
+        theme: "dark",
+      });
+      status.textContent = "Complete the security check to send your message.";
+    } catch {
+      turnstileLoad = null;
+      turnstileWidgetId = undefined;
+      status.textContent = "The security check couldn’t load. Please close and reopen the form to try again.";
+    } finally {
+      preparingTurnstile = false;
+    }
+  }
+
+  openButton.addEventListener("click", () => {
+    dialog.showModal();
+    if (turnstileWidgetId === undefined) {
+      void prepareTurnstile();
+    } else {
+      window.turnstile.reset(turnstileWidgetId);
+      status.textContent = "Complete the security check to send your message.";
+    }
+  });
   dialog.querySelector("[data-contact-close]").addEventListener("click", () => dialog.close());
   // Native dialog provides Escape handling and an inert background.
   // Keep Tab within the form even at the browser's first/last focus boundary.
@@ -68,10 +131,59 @@
       first.focus();
     }
   });
-  dialog.addEventListener("close", () => openButton.focus());
-  dialog.querySelector("[data-contact-form]").addEventListener("submit", (event) => {
+  dialog.addEventListener("close", () => {
+    if (window.turnstile && turnstileWidgetId !== undefined) {
+      window.turnstile.reset(turnstileWidgetId);
+    }
+    openButton.focus();
+  });
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    // UI stub only: preserve the form and never claim delivery or make a network request.
-    dialog.querySelector("#contact-status").textContent = "Sending is not connected yet. Your message has not been sent.";
+    if (sending) return;
+
+    if (turnstileWidgetId === undefined || !window.turnstile) {
+      status.textContent = "The security check isn’t ready yet. Please try again in a moment.";
+      return;
+    }
+
+    const token = window.turnstile.getResponse(turnstileWidgetId);
+    if (!token) {
+      status.textContent = "Complete the security check before sending.";
+      return;
+    }
+
+    const fields = new FormData(form);
+    const payload = {
+      name: fields.get("name"),
+      email: fields.get("email"),
+      subject: fields.get("subject"),
+      message: fields.get("message"),
+      website: fields.get("website"),
+      turnstileToken: token,
+    };
+
+    sending = true;
+    submitButton.disabled = true;
+    status.textContent = "Sending your message…";
+    try {
+      const response = await fetch(contactEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (!response.ok || result.ok !== true) throw new Error("Submission failed.");
+
+      form.reset();
+      status.textContent = "Thanks—your message has been sent.";
+    } catch {
+      status.textContent = "Sorry, your message couldn’t be sent. Please try again.";
+    } finally {
+      if (window.turnstile && turnstileWidgetId !== undefined) {
+        window.turnstile.reset(turnstileWidgetId);
+      }
+      submitButton.disabled = false;
+      sending = false;
+    }
   });
 })();

@@ -83,7 +83,6 @@
         <h2 id="contact-title">Contact</h2>
         <button class="modal-control" type="button" data-contact-close aria-label="Close contact form">Close</button>
       </div>
-      <!-- TODO: Connect submission after the delivery mechanism is selected. No endpoint is configured. -->
       <form class="contact-form" method="dialog" data-contact-form>
         <label for="contact-name">Name</label>
         <input id="contact-name" name="name" autocomplete="name" required autofocus>
@@ -93,7 +92,12 @@
         <input id="contact-subject" name="subject" required>
         <label for="contact-message">Message</label>
         <textarea id="contact-message" name="message" rows="5" required></textarea>
-        <p id="contact-status" class="interior-note" role="status">Sending is not connected yet.</p>
+        <div id="contact-turnstile" data-sitekey="0x4AAAAAAFXJYJNLICTuF6vb" role="group" aria-label="Spam protection"></div>
+        <div hidden aria-hidden="true">
+          <label for="contact-website">Leave this field empty</label>
+          <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p id="contact-status" class="interior-note" role="status" aria-live="polite">Complete the security check to send your message.</p>
         <button class="form-submit" type="submit">Send message</button>
       </form>
     </dialog>
