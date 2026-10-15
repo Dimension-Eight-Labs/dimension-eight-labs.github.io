@@ -1,0 +1,192 @@
+.bathroom-clock-intro {
+  max-width: 72ch;
+  margin-top: var(--space-md);
+  color: var(--content-text);
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+}
+
+.bathroom-clock-facts,
+.bathroom-clock-resource-grid,
+.bathroom-clock-architecture,
+.bathroom-clock-gallery {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.bathroom-clock-facts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: var(--space-lg) 0 0;
+  padding: var(--space-md) 0;
+  border-block: 1px solid var(--interior-rule);
+}
+
+.bathroom-clock-facts div,
+.bathroom-clock-resource-grid div {
+  min-width: 0;
+}
+
+.bathroom-clock-facts dt,
+.bathroom-clock-resource-grid dt,
+.bathroom-clock-status {
+  color: var(--color-caption);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bathroom-clock-facts dd,
+.bathroom-clock-resource-grid dd {
+  margin: 0.25rem 0 0;
+  color: var(--content-heading);
+  line-height: 1.45;
+}
+
+.bathroom-clock-architecture {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  margin-top: var(--space-md);
+}
+
+.bathroom-clock-architecture section {
+  position: relative;
+  padding: var(--space-sm);
+  border-top: 1px solid var(--color-muted);
+  background: rgb(1 1 0 / 16%);
+}
+
+.bathroom-clock-architecture section:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 1rem;
+  right: calc(var(--space-md) * -0.7);
+  z-index: 1;
+  color: var(--color-caption);
+}
+
+.bathroom-clock-architecture h3 {
+  font-size: 1rem;
+}
+
+.bathroom-clock-architecture p {
+  margin-top: var(--space-xs);
+  color: var(--content-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.bathroom-clock-state-list,
+.bathroom-clock-qualification-list,
+.bathroom-clock-next-list {
+  max-width: 70ch;
+  padding-left: 1.25rem;
+}
+
+.bathroom-clock-state-list li + li,
+.bathroom-clock-qualification-list li + li,
+.bathroom-clock-next-list li + li {
+  margin-top: var(--space-xs);
+}
+
+.bathroom-clock-resource-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: var(--space-md) 0;
+  padding: var(--space-md);
+  border: 1px solid var(--interior-rule);
+}
+
+.bathroom-clock-resource-grid dd strong {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.bathroom-clock-resource-grid dd span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--content-secondary);
+  font-size: 0.875rem;
+}
+
+.bathroom-clock-webui {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 0.38fr);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: var(--space-md);
+}
+
+.bathroom-clock-webui figure,
+.bathroom-clock-gallery figure {
+  margin: 0;
+}
+
+.bathroom-clock-webui img,
+.bathroom-clock-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bathroom-clock-audio {
+  display: block;
+  width: min(100%, 24rem);
+  margin-block: var(--space-sm);
+}
+
+.bathroom-clock-webui figure {
+  max-width: 30rem;
+  justify-self: center;
+}
+
+.bathroom-clock-webui figcaption,
+.bathroom-clock-gallery figcaption {
+  margin-top: var(--space-xs);
+}
+
+.bathroom-clock-gallery {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--space-md);
+}
+
+.bathroom-clock-gallery figure {
+  min-width: 0;
+}
+
+.bathroom-clock-note {
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--interior-rule);
+  color: var(--content-secondary);
+}
+
+@media (max-width: 56rem) {
+  .bathroom-clock-facts,
+  .bathroom-clock-architecture {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bathroom-clock-architecture section:nth-child(2)::after {
+    content: "";
+  }
+
+  .bathroom-clock-webui {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bathroom-clock-webui figure {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 40rem) {
+  .bathroom-clock-facts,
+  .bathroom-clock-resource-grid,
+  .bathroom-clock-architecture,
+  .bathroom-clock-gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bathroom-clock-architecture section::after {
+    content: "" !important;
+  }
+}
