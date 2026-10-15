@@ -3,7 +3,9 @@ import test from "node:test";
 import worker from "../src/index.mjs";
 
 const SITEVERIFY_SECRET = "test-secret-not-for-production";
+const RESEND_API_KEY = "re_test_key_not_for_production";
 const ORIGIN = "https://dim8labs.com";
+const RESEND_URL = "https://api.resend.com/emails";
 const payload = {
   name: "Test Visitor",
   email: "visitor@example.test",
@@ -23,25 +25,35 @@ function request(body, options = {}) {
   });
 }
 
-async function withVerification(t, verification, run) {
+async function withVerification(t, verification, run, resendResponse = () => new Response(JSON.stringify({ id: "local-test-email" }), {
+  status: 200,
+  headers: { "Content-Type": "application/json" },
+})) {
   const originalFetch = globalThis.fetch;
-  let sentEmail;
   let verificationRequest;
+  let resendRequest;
   globalThis.fetch = async (url, init) => {
-    verificationRequest = { url: String(url), init };
-    return new Response(JSON.stringify(verification), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    if (String(url) === "https://challenges.cloudflare.com/turnstile/v0/siteverify") {
+      verificationRequest = { url: String(url), init };
+      return new Response(JSON.stringify(verification), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    if (String(url) === RESEND_URL) {
+      resendRequest = { url: String(url), init };
+      return resendResponse();
+    }
+    assert.fail(`Unexpected outbound request: ${String(url)}`);
   };
 
   try {
     await run({
       verificationRequest: () => verificationRequest,
-      sentEmail: () => sentEmail,
+      resendRequest: () => resendRequest,
       env: {
         TURNSTILE_SECRET: SITEVERIFY_SECRET,
-        CONTACT_EMAIL: { send: async (message) => { sentEmail = message; return { messageId: "local-test" }; } },
+        RESEND_API_KEY,
       },
     });
   } finally {
@@ -49,7 +61,7 @@ async function withVerification(t, verification, run) {
   }
 }
 
-test("valid submission verifies Turnstile and sends only to the fixed recipient", async (t) => {
+test("valid submission sends the expected email through Resend", async (t) => {
   await withVerification(t, { success: true, hostname: "dim8labs.com" }, async (context) => {
     const response = await worker.fetch(request(payload, {
       headers: { "CF-Connecting-IP": "192.0.2.44" },
@@ -64,12 +76,19 @@ test("valid submission verifies Turnstile and sends only to the fixed recipient"
     assert.equal(verifyForm.get("response"), "test-token");
     assert.equal(verifyForm.get("remoteip"), "192.0.2.44");
 
-    assert.equal(context.sentEmail().to, "rob@dim8labs.com");
-    assert.equal(context.sentEmail().from, "website@dim8labs.com");
-    assert.equal(context.sentEmail().replyTo, payload.email);
-    assert.equal(context.sentEmail().subject, "Website contact: A test message");
-    assert.match(context.sentEmail().text, /Name: Test Visitor/);
-    assert.match(context.sentEmail().text, /Message:\nHello from a local test\./);
+    const resendRequest = context.resendRequest();
+    assert.equal(resendRequest.url, RESEND_URL);
+    assert.equal(resendRequest.init.method, "POST");
+    assert.equal(resendRequest.init.headers.Authorization, `Bearer ${RESEND_API_KEY}`);
+    assert.equal(resendRequest.init.headers["Content-Type"], "application/json");
+    const sentEmail = JSON.parse(resendRequest.init.body);
+    assert.deepEqual(sentEmail.to, ["rob@dim8labs.com"]);
+    assert.equal(sentEmail.from, "website@mail.dim8labs.com");
+    assert.equal(sentEmail.reply_to, payload.email);
+    assert.equal(sentEmail.subject, "Website contact: A test message");
+    assert.match(sentEmail.text, /Name: Test Visitor/);
+    assert.match(sentEmail.text, /Email: visitor@example\.test/);
+    assert.match(sentEmail.text, /Message:\nHello from a local test\./);
   });
 });
 
@@ -122,7 +141,7 @@ test("rejects invalid email before calling Siteverify or sending email", async (
       const response = await worker.fetch(request({ ...payload, email }), context.env);
       assert.equal(response.status, 400);
       assert.equal(context.verificationRequest(), undefined);
-      assert.equal(context.sentEmail(), undefined);
+      assert.equal(context.resendRequest(), undefined);
     }
   });
 });
@@ -132,7 +151,7 @@ test("rejects a filled honeypot without verifying or delivering", async (t) => {
     const response = await worker.fetch(request({ ...payload, website: "bot-filled-this" }), context.env);
     assert.equal(response.status, 403);
     assert.equal(context.verificationRequest(), undefined);
-    assert.equal(context.sentEmail(), undefined);
+    assert.equal(context.resendRequest(), undefined);
   });
 });
 
@@ -140,13 +159,13 @@ test("rejects failed Turnstile verification and hostname mismatch", async (t) =>
   await withVerification(t, { success: false, hostname: "dim8labs.com" }, async (context) => {
     const response = await worker.fetch(request(payload), context.env);
     assert.equal(response.status, 403);
-    assert.equal(context.sentEmail(), undefined);
+    assert.equal(context.resendRequest(), undefined);
   });
 
   await withVerification(t, { success: true, hostname: "other.example" }, async (context) => {
     const response = await worker.fetch(request(payload), context.env);
     assert.equal(response.status, 403);
-    assert.equal(context.sentEmail(), undefined);
+    assert.equal(context.resendRequest(), undefined);
   });
 });
 
@@ -156,7 +175,7 @@ test("returns a non-sensitive service error when verification cannot be reached"
   try {
     const response = await worker.fetch(request(payload), {
       TURNSTILE_SECRET: SITEVERIFY_SECRET,
-      CONTACT_EMAIL: { send: async () => assert.fail("Email must not be sent") },
+      RESEND_API_KEY,
     });
     assert.equal(response.status, 503);
     assert.deepEqual(await response.json(), { ok: false, error: "verification_unavailable" });
@@ -165,13 +184,23 @@ test("returns a non-sensitive service error when verification cannot be reached"
   }
 });
 
-test("returns a non-sensitive error when the email binding rejects delivery", async (t) => {
-  await withVerification(t, { success: true, hostname: "dim8labs.com" }, async () => {
-    const response = await worker.fetch(request(payload), {
-      TURNSTILE_SECRET: SITEVERIFY_SECRET,
-      CONTACT_EMAIL: { send: async () => { throw new Error("private delivery detail"); } },
-    });
-    assert.equal(response.status, 503);
-    assert.deepEqual(await response.json(), { ok: false, error: "delivery_failed" });
-  });
+test("returns generic delivery_failed when Resend rejects the request", async (t) => {
+  const originalConsoleError = console.error;
+  const diagnostics = [];
+  console.error = (...args) => diagnostics.push(args.join(" "));
+  try {
+    await withVerification(t, { success: true, hostname: "dim8labs.com" }, async (context) => {
+      const response = await worker.fetch(request(payload), context.env);
+      assert.equal(response.status, 503);
+      assert.deepEqual(await response.json(), { ok: false, error: "delivery_failed" });
+      assert.ok(context.resendRequest());
+    }, () => new Response(JSON.stringify({
+      name: "validation_error",
+      message: "private provider detail must not reach the browser",
+    }), { status: 422, headers: { "Content-Type": "application/json" } }));
+    assert.match(diagnostics.join("\n"), /HTTP 422, validation_error/);
+    assert.doesNotMatch(diagnostics.join("\n"), /visitor@example\.test|private provider detail|re_test_key/);
+  } finally {
+    console.error = originalConsoleError;
+  }
 });

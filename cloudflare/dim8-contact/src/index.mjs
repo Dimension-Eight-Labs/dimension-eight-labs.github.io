@@ -3,7 +3,8 @@ const CONTACT_PATH = "/submit";
 const MAX_BODY_BYTES = 12 * 1024;
 const MAX_TOKEN_LENGTH = 2048;
 const RECIPIENT = "rob@dim8labs.com";
-const SENDER = "website@dim8labs.com";
+const SENDER = "website@mail.dim8labs.com";
+const RESEND_EMAILS_URL = "https://api.resend.com/emails";
 
 const ALLOWED_ORIGINS = new Map([
   ["https://dim8labs.com", "dim8labs.com"],
@@ -141,6 +142,58 @@ async function verifyTurnstile(token, origin, request, secret) {
   }
 }
 
+function logResendFailure(status, responseBody) {
+  const errorCode = typeof responseBody?.name === "string"
+    ? responseBody.name
+    : typeof responseBody?.code === "string"
+      ? responseBody.code
+      : null;
+  const safeCode = errorCode && /^[A-Za-z0-9_.-]{1,64}$/.test(errorCode)
+    ? errorCode
+    : "unspecified";
+  console.error(`Resend delivery failed: HTTP ${status}, ${safeCode}`);
+}
+
+async function sendContactEmail(submission, apiKey) {
+  const emailText = [
+    "New message from dim8labs.com",
+    "",
+    `Name: ${submission.name}`,
+    `Email: ${submission.email}`,
+    `Subject: ${submission.subject}`,
+    "",
+    "Message:",
+    submission.message,
+  ].join("\n");
+
+  const response = await fetch(RESEND_EMAILS_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: SENDER,
+      to: [RECIPIENT],
+      subject: `Website contact: ${submission.subject}`,
+      text: emailText,
+      reply_to: submission.email,
+    }),
+    signal: AbortSignal.timeout(10000),
+  });
+
+  if (response.ok) return true;
+
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch {
+    responseBody = null;
+  }
+  logResendFailure(response.status, responseBody);
+  return false;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -200,7 +253,7 @@ export default {
     const submission = parseSubmission(parsedBody.value);
     if (!submission) return invalidResponse(origin);
     if (submission.website) return invalidResponse(origin, 403);
-    if (!env.TURNSTILE_SECRET || !env.CONTACT_EMAIL?.send) {
+    if (!env.TURNSTILE_SECRET || !env.RESEND_API_KEY) {
       return jsonResponse(origin, { ok: false, error: "service_unavailable" }, 503);
     }
 
@@ -212,26 +265,12 @@ export default {
       return jsonResponse(origin, { ok: false, error: "verification_failed" }, 403);
     }
 
-    const emailText = [
-      "New message from dim8labs.com",
-      "",
-      `Name: ${submission.name}`,
-      `Email: ${submission.email}`,
-      `Subject: ${submission.subject}`,
-      "",
-      "Message:",
-      submission.message,
-    ].join("\n");
-
     try {
-      await env.CONTACT_EMAIL.send({
-        from: SENDER,
-        to: RECIPIENT,
-        replyTo: submission.email,
-        subject: `Website contact: ${submission.subject}`,
-        text: emailText,
-      });
+      if (!await sendContactEmail(submission, env.RESEND_API_KEY)) {
+        return jsonResponse(origin, { ok: false, error: "delivery_failed" }, 503);
+      }
     } catch {
+      console.error("Resend delivery request failed before receiving a response");
       return jsonResponse(origin, { ok: false, error: "delivery_failed" }, 503);
     }
 
