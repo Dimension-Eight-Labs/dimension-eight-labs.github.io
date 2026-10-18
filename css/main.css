@@ -76,11 +76,9 @@ h1 {
 }
 
 .landing-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.875rem;
+  /* Retired from the root splash. Keep legacy/cached markup from exposing
+     the old destination menu while clients transition to the new page. */
+  display: none;
 }
 
 /* Shared textual link language; retain the landing page's original class as an alias. */

@@ -250,6 +250,22 @@ dim8-header {
   row-gap: clamp(4rem, 8vw, 7rem);
 }
 
+.portfolio-replay {
+  padding-bottom: var(--space-lg);
+  text-align: right;
+}
+
+.portfolio-replay .dim8-link {
+  color: var(--content-secondary);
+  font-size: 0.75rem;
+  opacity: 0.68;
+}
+
+.portfolio-replay .dim8-link:hover,
+.portfolio-replay .dim8-link:focus-visible {
+  opacity: 1;
+}
+
 .project-entry {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

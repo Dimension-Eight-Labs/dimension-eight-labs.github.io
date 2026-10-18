@@ -3,6 +3,12 @@
   const skip = document.querySelector("[data-vfd-startup-skip]");
   const logoFrame = document.querySelector("main .logo-frame");
   const cursor = document.querySelector(".vfd-startup__cursor");
+  const introConfig = window.dim8IntroConfig || {};
+  if (introConfig.redirecting) return;
+
+  const storageKey = introConfig.storageKey || "dim8labs_intro_seen";
+  const portfolioUrl = "/portfolio/";
+  const completedHoldDuration = 2000;
 
   // Existing ignition timings, preceded by a first-paint black hold.
   const sequence = [
@@ -82,11 +88,48 @@
     return;
   }
 
-  let timer = null;
+  let sequenceTimer = null;
+  let fadeFallbackTimer = null;
+  let redirectTimer = null;
   let step = 0;
   let currentState = "";
   let phaseStep = 0;
   let shutdownStep = 0;
+  let completionStarted = false;
+  let navigationStarted = false;
+
+  const markIntroSeen = () => {
+    try {
+      window.localStorage.setItem(storageKey, "1");
+    } catch {
+      // Navigation must still complete when storage is unavailable.
+    }
+  };
+
+  const goToPortfolio = () => {
+    if (navigationStarted) return;
+    navigationStarted = true;
+    window.location.replace(portfolioUrl);
+  };
+
+  const completeIntro = () => {
+    if (completionStarted) return;
+    completionStarted = true;
+
+    window.clearTimeout(fadeFallbackTimer);
+    fadeFallbackTimer = null;
+    overlay.removeEventListener("transitionend", handleOverlayFadeEnd);
+    overlay.hidden = true;
+    overlay.className = "vfd-startup";
+    markIntroSeen();
+    redirectTimer = window.setTimeout(goToPortfolio, completedHoldDuration);
+  };
+
+  function handleOverlayFadeEnd(event) {
+    if (event.target === overlay && event.propertyName === "opacity") {
+      completeIntro();
+    }
+  }
 
   const alignDisplay = () => {
     const bounds = logoFrame.getBoundingClientRect();
@@ -127,38 +170,32 @@
     overlay.style.setProperty("--cursor-edge", "25%");
   };
 
-  const revealHomepage = (immediate = false) => {
-    window.clearTimeout(timer);
-    timer = null;
+  const finishAnimation = () => {
+    window.clearTimeout(sequenceTimer);
+    sequenceTimer = null;
     window.removeEventListener("resize", alignDisplay);
     if (skip) {
       skip.removeEventListener("click", skipIntro);
       skip.blur();
     }
 
-    if (immediate) {
-      overlay.hidden = true;
-      overlay.className = "vfd-startup";
-      return;
-    }
-
+    overlay.addEventListener("transitionend", handleOverlayFadeEnd);
     overlay.classList.add("is-finishing");
-    timer = window.setTimeout(() => {
-      timer = null;
-      overlay.hidden = true;
-      overlay.className = "vfd-startup";
-    }, overlayFadeDuration);
+    // `transitionend` is the authoritative completion signal. The fallback
+    // covers browsers that suppress the event without creating another path:
+    // both signals converge on the guarded completeIntro().
+    fadeFallbackTimer = window.setTimeout(completeIntro, overlayFadeDuration + 100);
   };
 
   const runShutdown = () => {
     if (shutdownStep >= shutdownSequence.length) {
-      revealHomepage();
+      finishAnimation();
       return;
     }
 
     const next = shutdownSequence[shutdownStep++];
     setState(next.state);
-    timer = window.setTimeout(runShutdown, next.duration);
+    sequenceTimer = window.setTimeout(runShutdown, next.duration);
   };
 
   const finishTyping = () => {
@@ -175,7 +212,7 @@
 
     const next = cursorTail[phaseStep++];
     setCursor(next.visible);
-    timer = window.setTimeout(runCursorTail, next.delay);
+    sequenceTimer = window.setTimeout(runCursorTail, next.delay);
   };
 
   const typeNextCharacter = () => {
@@ -188,7 +225,7 @@
 
     const next = typingSteps[phaseStep++];
     setRevealEdge(next.reveal);
-    timer = window.setTimeout(typeNextCharacter, next.delay);
+    sequenceTimer = window.setTimeout(typeNextCharacter, next.delay);
   };
 
   const runCursorLeadIn = () => {
@@ -202,7 +239,7 @@
 
     const next = cursorLeadIn[phaseStep++];
     setCursor(next.visible);
-    timer = window.setTimeout(runCursorLeadIn, next.delay);
+    sequenceTimer = window.setTimeout(runCursorLeadIn, next.delay);
   };
 
   const startTextReveal = () => {
@@ -215,8 +252,15 @@
 
   function skipIntro(event) {
     event.preventDefault();
-    revealHomepage(true);
-    window.location.assign(skip.href);
+    completionStarted = true;
+    window.clearTimeout(sequenceTimer);
+    window.clearTimeout(fadeFallbackTimer);
+    window.clearTimeout(redirectTimer);
+    window.removeEventListener("resize", alignDisplay);
+    overlay.removeEventListener("transitionend", handleOverlayFadeEnd);
+    overlay.hidden = true;
+    markIntroSeen();
+    goToPortfolio();
   }
 
   const advance = () => {
@@ -230,7 +274,7 @@
 
     setState(next.state);
 
-    timer = window.setTimeout(advance, next.duration);
+    sequenceTimer = window.setTimeout(advance, next.duration);
   };
 
   alignDisplay();

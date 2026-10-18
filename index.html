@@ -5,22 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Dimension Eight Labs builds open source software, firmware, and embedded systems.">
     <title>Dimension Eight Labs</title>
+    <script>
+      (() => {
+        const storageKey = "dim8labs_intro_seen";
+        const forceIntro = new URLSearchParams(window.location.search).get("intro") === "1";
+        let redirecting = false;
+
+        try {
+          redirecting = !forceIntro && window.localStorage.getItem(storageKey) === "1";
+        } catch {
+          // Storage can be unavailable in privacy-restricted contexts. In that
+          // case, allow the intro to run rather than blocking the site.
+        }
+
+        window.dim8IntroConfig = { storageKey, forceIntro, redirecting };
+        if (redirecting) window.location.replace("/portfolio/");
+      })();
+    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css?v=intro-runtime-2">
     <script>
       window.dim8IntroFallbackTimer = window.setTimeout(() => {
-        document.documentElement.classList.remove("vfd-intro-pending");
+        window.location.replace("/portfolio/");
       }, 2000);
     </script>
     <noscript>
-      <style>
-        html.vfd-intro-pending main { visibility: visible; }
-        .vfd-startup { display: none; }
-      </style>
+      <meta http-equiv="refresh" content="0; url=/portfolio/">
     </noscript>
-    <script src="js/main.js" defer></script>
+    <script src="js/main.js?v=intro-runtime-3" defer></script>
   </head>
   <body>
     <main>
@@ -33,12 +47,6 @@
       </figure>
       <h1 class="dim8labstext">Dimension Eight Labs</h1>
       <p class="tagline">Open source software, firmware, and embedded systems.</p>
-      <nav class="landing-nav" aria-label="Primary navigation">
-        <a class="github-link" href="https://github.com/Dimension-Eight-Labs" target="_blank" rel="noopener noreferrer">GitHub →</a>
-        <a class="github-link" href="portfolio/">Portfolio →</a>
-        <a class="github-link" href="apps/">Apps →</a>
-        <a class="github-link" href="website-examples/">Website Examples →</a>
-      </nav>
     </main>
 
     <div class="vfd-startup" data-vfd-startup style="--text-reveal-edge: 24%; --cursor-edge: 25%;">
@@ -58,7 +66,7 @@
           </div>
         </div>
       </div>
-      <a class="vfd-startup__skip" href="portfolio/" data-vfd-startup-skip>SKIP INTRO →</a>
+      <a class="vfd-startup__skip" href="/portfolio/" data-vfd-startup-skip>SKIP INTRO →</a>
     </div>
   </body>
 </html>
