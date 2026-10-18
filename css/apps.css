@@ -16,6 +16,33 @@
 
 .apps-list {
   padding-block: 0;
+  row-gap: 0;
+}
+
+/* App rows remain artwork-left so adjacent products read consistently. This
+   intentionally overrides the alternating engineering-portfolio layout. */
+.apps-list .app-entry {
+  grid-template-areas: "media copy";
+}
+
+/* Separate adjacent apps without adding decorative markup to every entry. */
+.apps-list .app-entry + .app-entry {
+  position: relative;
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.apps-list .app-entry + .app-entry::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgb(151 181 176 / 78%) 0 12%,
+    rgb(82 102 107 / 68%) 12% 100%
+  );
+  box-shadow: 0 0 8px rgb(151 181 176 / 12%);
+  content: "";
 }
 
 /* Phone screenshots keep their natural tall proportions without dominating a row. */
@@ -24,7 +51,8 @@
   justify-self: center;
 }
 
-.app-entry__media--themes {
+.app-entry__media--themes,
+.app-entry__media--screenshots {
   width: min(100%, 31.5rem);
 }
 
@@ -48,6 +76,24 @@
 }
 
 .app-entry__media--themes .app-entry__theme-shot--classic {
+  z-index: 2;
+}
+
+/* Reusable two-screen stack. Background and foreground classes make the
+   intended reading order independent of the images' source order. */
+.app-entry__media--screenshots .app-entry__screenshot {
+  inset: 0 auto auto 14%;
+  width: 48%;
+  height: 72.4638%;
+  object-fit: contain;
+}
+
+.app-entry__media--screenshots .app-entry__screenshot--background {
+  inset: 27.5362% auto auto 38%;
+  z-index: 1;
+}
+
+.app-entry__media--screenshots .app-entry__screenshot--foreground {
   z-index: 2;
 }
 
@@ -228,6 +274,10 @@
 }
 
 @media (max-width: 40rem) {
+  .apps-list .app-entry {
+    grid-template-areas: "media" "copy";
+  }
+
   .app-entry__media {
     width: min(100%, 18rem);
   }
